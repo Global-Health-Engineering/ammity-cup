@@ -1,10 +1,10 @@
 # Design
 
-Engineering reference for the SpaceCup base geometry, the eight mechanism concepts, and the bench-test scoring behind them. Numbers here are transcribed from Keller, K. (2026). *AMMITY*. MSc thesis, ETH Zurich, Global Health Engineering. Not published with this repository. Page references are given as `(thesis p.N)`.
+Engineering reference for the SpaceCup base geometry, the seven mechanisms designed in the thesis, and the bench-test scoring behind six of them. Numbers here are transcribed from Keller, K. (2026). *AMMITY*. MSc thesis, ETH Zurich, Global Health Engineering. Not published with this repository. Page references are given as `(thesis p.N)`.
 
 ## Base cup requirements
 
-All eight mechanisms share the same base cup geometry, taken from the 2025 BSc thesis that preceded this project (thesis p.9; see [`design-history.md`](design-history.md)).
+All seven mechanisms share the same base cup geometry, taken from the 2025 BSc thesis that preceded this project (thesis p.9; see [`design-history.md`](design-history.md)).
 
 | Parameter | Value |
 |---|---|
@@ -21,7 +21,7 @@ All eight mechanisms share the same base cup geometry, taken from the 2025 BSc t
 
 ## Mechanisms
 
-Eight mechanism concepts were designed on the base cup. Seven were evaluated in the thesis's functional bench test and reduced-gravity flights (thesis pp.10-11, pp.20-21); the extraction valve is an untested concept documented separately below. Bench scores are the `overall` column of [`../data/ground-test-scores.csv`](../data/ground-test-scores.csv), out of 25.
+Seven mechanisms were designed on the base cup and are documented in the thesis (thesis pp.10-11): Flower Low, Flower High, Twister, Umbrella, Balloon, Duckbill and Drawstring. Six were bench-scored; the balloon could not be manufactured reliably and was excluded from scoring (thesis p.20). Only Flower Low was flown, in reduced-gravity flights (thesis pp.17, 20-21). The extraction valve is an eighth, later concept: designed but not tested, and not part of the thesis; it is documented separately below. Bench scores are the `overall` column of [`../data/ground-test-scores.csv`](../data/ground-test-scores.csv), out of 25.
 
 ### Flower Low
 
@@ -53,7 +53,7 @@ A flexible circular lid, folded in half against the inner wall of the cup, is co
 
 ### Extraction valve
 
-Not one of the thesis's seven bench-tested mechanisms. The thesis discusses a cup with a syringe or extraction port, letting fluid be removed while the cup stays inserted, as a fundamentally different collection principle worth comparing against the closing-cup approach in future work (thesis p.28; see [`design-history.md`](design-history.md)). The files under [`../hardware/extraction-valve/`](../hardware/extraction-valve/) are an untested concept: they have no bench-test or flight data.
+An eighth, later concept: not one of the thesis's seven designed mechanisms, and not tested or described in the thesis. The thesis discusses a cup with a syringe or extraction port, letting fluid be removed while the cup stays inserted, as a fundamentally different collection principle worth comparing against the closing-cup approach in future work (thesis p.28; see [`design-history.md`](design-history.md)). The files under [`../hardware/extraction-valve/`](../hardware/extraction-valve/) are an untested concept: they have no bench-test or flight data.
 
 ## Scoring
 

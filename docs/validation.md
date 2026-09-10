@@ -4,7 +4,7 @@ What the SpaceCup prototypes were tested against, at 1 G on the bench and in red
 
 ## Bench tests at 1 G
 
-All seven mechanisms (the balloon excluded, see [`design.md`](design.md)) were evaluated under standard laboratory conditions, using an anatomical vaginal model injection-moulded from a soft silicone (thesis p.14).
+Six mechanisms (the balloon excluded, not reliably manufacturable, see [`design.md`](design.md)) were evaluated under standard laboratory conditions, using a self-made anatomical vaginal model, injection-moulded from a soft silicone in a printed mould (thesis p.14).
 
 **Fluid recipe:** egg white 30 mL, ketchup 50 mL, sucrose solution (30 % sugar in water) 20 mL. Ketchup gives base viscosity and shear-thinning behaviour, egg white simulates clot-like structures, and the sucrose solution adjusts density (thesis p.15).
 

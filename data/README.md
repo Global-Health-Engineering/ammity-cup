@@ -25,7 +25,7 @@ Questionnaire participants are identified only as P1-P3. Free-text answers are s
 
 ## Headline results
 
-- Both Flower designs (low and high petal count) scored 24/25 in the functional bench test, the highest of any prototype.
+- Both Flower designs (petal bases low in the cup, and nearer the rim) scored 24/25 in the functional bench test, the highest of any prototype.
 - 70 % isopropanol (`ipa-70`) gave the lowest total colony counts of the three cleaning methods, i.e. the best disinfection performance.
 - No fluid volumes were measured during the parabolic-flight tests; the flight results are qualitative observations only.
 

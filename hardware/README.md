@@ -13,8 +13,8 @@ Licensed **CERN-OHL-P v2** (see `../LICENSE-CERN-OHL-P-2.0.md`).
 | balloon | An inflatable membrane on the cup wall that rotates upward to seal the opening when a stem-integrated balloon is compressed (thesis p.10) | not reliably manufacturable | not scored (excluded, thesis p.20) | [`balloon/`](balloon/) |
 | duckbill | A pressure-difference valve between an upper and lower chamber, opened by squeezing the cup before removal (thesis p.10) | bench-tested | 22/25 | [`duckbill/`](duckbill/) |
 | drawstring | A flexible lid, folded against the inner wall, drawn across the opening by a stem-integrated pull string (thesis p.10) | bench-tested | 18/25 | [`drawstring/`](drawstring/) |
-| extraction-valve | A valve-and-button assembly intended to withdraw fluid through a port while the cup stays inserted; not part of the thesis's seven evaluated mechanisms (see [`../docs/design.md`](../docs/design.md)) | untested concept | not scored | [`extraction-valve/`](extraction-valve/) |
-| artificial-vagina | Silicone-cast anatomical test model used to hold and evaluate the cups during bench and flight testing; not a menstrual cup design | test equipment | not applicable | [`artificial-vagina/`](artificial-vagina/) |
+| extraction-valve | A valve-and-button assembly intended to withdraw fluid through a port while the cup stays inserted; an eighth, later concept, not one of the thesis's seven mechanisms and not tested or described in the thesis (see [`../docs/design.md`](../docs/design.md)) | untested concept | not scored | [`extraction-valve/`](extraction-valve/) |
+| artificial-vagina | Two test models: the self-made model here, cast from the printed mould, was used for the 1 G bench tests (thesis pp.14-15); the flights used a separate, store-bought model, not shipped in this repository (thesis p.17). The file names ("parabolicflight_vagina") are the author's own and predate the flight/bench distinction | test equipment | not applicable | [`artificial-vagina/`](artificial-vagina/) |
 
 Bench scores are the `overall` column of [`../data/ground-test-scores.csv`](../data/ground-test-scores.csv) (out of 25); see [`../docs/design.md`](../docs/design.md) for the full breakdown by criterion.
 
@@ -34,7 +34,7 @@ STEP files with `mould` in the name are moulds. The rest are the cast parts. Som
 - The drawstring lid is modelled flat, not in its folded, as-cast shape.
 - `flower-low/step/flower-cup-withrim-part.step` holds 6 solids: two cup-body halves split at the mould parting plane, two small rim pieces, a petal disc, and the petals-with-strings solid.
 - `flower-low` also contains a `flower-stopper` (`flower-stopper.step`, `flower-stopper-mould.step`), which the thesis does not describe.
-- The extraction valve is an untested concept: it is not one of the thesis's seven bench-tested mechanisms and has no bench-test or flight data.
+- The extraction valve is an eighth, later concept: it is not one of the thesis's seven designed mechanisms, was not tested, and is not described in the thesis; it has no bench-test or flight data.
 - In the Flower Low and Flower High CAD, the pull strings are modelled straight, as cast (the mould cores run to the same length). In the cast cup, each petal's string joins the pull mechanism in the stem (thesis p.10). The renders show this as-cast, straight-string geometry, not the strings pulled taut.
 - The drawstring's pull-string tabs are small and sit inside the rim, so they are barely visible in the render.
 
