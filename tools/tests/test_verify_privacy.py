@@ -36,3 +36,13 @@ def test_main_exit_codes(tmp_path):
     bad = tmp_path / "b.md"; bad.write_text("thanks to Zelda Quux\n")
     assert main([str(good)], hashes_path=str(h)) == 0
     assert main([str(bad)], hashes_path=str(h)) == 1
+
+def test_main_fails_closed_on_empty_hash_file(tmp_path):
+    h = tmp_path / "empty.txt"; h.write_text("# comment\n")
+    good = tmp_path / "g.md"; good.write_text("P1 and P2\n")
+    assert main([str(good)], hashes_path=str(h)) == 1
+
+def test_main_fails_closed_on_missing_hash_file(tmp_path):
+    missing = tmp_path / "does-not-exist.txt"
+    good = tmp_path / "g.md"; good.write_text("P1 and P2\n")
+    assert main([str(good)], hashes_path=str(missing)) == 1

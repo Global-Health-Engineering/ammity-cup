@@ -77,6 +77,19 @@ def default_files():
 
 
 def main(patterns=None, hashes_path=DEFAULT_HASHES):
+    # Fail closed: without a usable hash list the name check would
+    # silently do nothing (scan_text skips n-grams when hashes is empty)
+    # and a leak would be indistinguishable from a clean run.
+    try:
+        hashes = load_hashes(hashes_path)
+    except OSError:
+        hashes = None
+    if not hashes:
+        print(f"verify_privacy: no participant-name hashes loaded from "
+              f"{hashes_path}; the name check cannot run. Regenerate "
+              f"tools/privacy_hashes.txt (see Task docs) before shipping.",
+              file=sys.stderr)
+        return 1
     if patterns:
         files = sorted({f for p in patterns for f in glob.glob(p, recursive=True)
                         if os.path.isfile(f) and f.lower().endswith(TEXT_SUFFIXES)})
@@ -85,7 +98,6 @@ def main(patterns=None, hashes_path=DEFAULT_HASHES):
     if not files:
         print("verify_privacy: no files matched", file=sys.stderr)
         return 1
-    hashes = load_hashes(hashes_path)
     failed = 0
     for path in files:
         with open(path, encoding="utf-8", errors="replace") as f:
