@@ -86,7 +86,7 @@ Different parts of this repository are released under different licenses, follow
 | Component                                                    | License                                    |
 | ------------------------------------------------------------ | ------------------------------------------ |
 | Hardware design (NX, STEP, mould STL in [`hardware/`](hardware/)) | [CERN-OHL-P v2](LICENSE-CERN-OHL-P-2.0.md) |
-| Documentation, data and this site                             | [CC BY 4.0](LICENSE-CC-BY-4.0.md)          |
+| Documentation, data, site and tooling                          | [CC BY 4.0](LICENSE-CC-BY-4.0.md)          |
 
 ## Acknowledgements
 

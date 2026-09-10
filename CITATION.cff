@@ -11,10 +11,9 @@ type: software
 version: 1.0.0
 date-released: 2026-09-10
 # A single value, not a list: Zenodo takes one licence per record.
-# The hardware in hardware/ is CERN-OHL-P v2, which is the more
-# restrictive of the two and the one that governs the design itself;
-# the documentation, data, site and tooling are CC BY 4.0, as set out
-# in the README and in LICENSE-CC-BY-4.0.md.
+# The hardware in hardware/ is CERN-OHL-P v2, the licence that governs
+# the hardware design itself; the documentation, data, site and tooling
+# are CC BY 4.0, as set out in the README and in LICENSE-CC-BY-4.0.md.
 license: CERN-OHL-P-2.0
 repository-code: "https://github.com/Global-Health-Engineering/ammity-cup"
 url: "https://global-health-engineering.github.io/ammity-cup/"
