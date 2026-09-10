@@ -76,7 +76,7 @@ jobs:
         run: python3 tools/verify_copy.py "site/dist/**/*.html" "site/dist/**/*.css" "site/dist/**/*.js"
 
       - name: No personal data (built site)
-        run: python3 tools/verify_privacy.py "site/dist/**/*.html"
+        run: python3 tools/verify_privacy.py "site/dist/**/*"
 
       - name: Built page has every section and asset
         run: python3 -m pytest tools/tests/test_site_build.py -v
