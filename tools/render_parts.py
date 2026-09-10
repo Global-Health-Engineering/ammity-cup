@@ -525,6 +525,13 @@ def build(scene_def):
                 set_material(obj, role_material(obj["role"]))
             view, margin, fill = Vector((0.0, -1.0, 0.15)), 1.1, True
 
+    if scene_def.view is not None:
+        # Fix round 2: a per-scene override of the camera direction chosen
+        # above, for a part whose interesting feature isn't visible from
+        # any of the standard layout angles (see tools/parts.py's
+        # CONCEPT_VIEWS comment for concept-drawstring).
+        view = Vector(scene_def.view)
+
     lo, hi = combined_bbox(objs)
     center, radius = bbox_center(lo, hi), bbox_radius(lo, hi)
     add_shadow_catcher(lo, hi)

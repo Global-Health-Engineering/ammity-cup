@@ -66,6 +66,13 @@ class Scene:
     # are unaffected.
     resolution: int = 800
     uniform_role: str = None
+    # Fix round 2: an optional camera-direction override, (x, y, z) in the
+    # world frame *after* each group's own orientation (see UP_TO_Z) — the
+    # same frame `view` variables inside render_parts.build() already use.
+    # None (every scene but concept-drawstring) keeps today's per-layout
+    # default (ISO, or the flatter flat-lay/section angles); render_parts
+    # substitutes Vector(view) instead when it is set.
+    view: tuple = None
 
 
 def _hw(slug, stem):
@@ -120,25 +127,47 @@ CONCEPT_CAPTIONS = {
     "flower-high": "Flower High: the same mechanism with the petal bases nearer the rim.",
     "twister": "Twister: top and bottom sections; the thin membrane skin that joins them is shown beside them.",
     "umbrella": "Umbrella: cup body, the umbrella insert, and its silicone housing, shown side by side.",
-    "drawstring": "Drawstring: cup body with the string channels; the folded lid is moulded flat and "
-                  "not shown; cut away to show the channels.",
+    "drawstring": "Drawstring: cup body; the pull-string tabs sit inside the rim, and the folded "
+                  "lid that closes the cup is moulded flat and not shown.",
     "duckbill": "Duckbill: moulded as two halves and joined; shown as the mirrored pair.",
     "balloon": "Balloon: cup body and bulb pipe; the balloon membrane exists only as its mould.",
     "extraction-valve": "Extraction valve: cup body and valve button, shown side by side. Untested concept.",
 }
 
-# Fix round 1: concept-drawstring's channels barely showed (mostly enclosed
-# by the body, only slivers visible from outside), so it is cut open like
-# flower-low-section instead of shown assembled.
-CONCEPT_LAYOUT_OVERRIDES = {"drawstring": "section"}
+# Fix round 2: fix round 1's layout="section" for concept-drawstring cut
+# through solid 0 (body) and left a sharp-edged near-black patch (likely
+# inside-out faces from cut_half's boolean on that solid's geometry), and
+# still didn't make the mechanism legible (the six small mechanism solids
+# sit behind two much larger body-coloured guide tabs that are part of
+# solid 0, not a separate mechanism index). Reverted to layout="assembled"
+# (no boolean) and instead looks down into the open rim, where the
+# mechanism tabs sit, via the `view` override below.
+#
+# (0.0, 0.45, 1.5), not the brief's example (0.3, -0.5, 1.4): every
+# mechanism solid's bounding box sits on the +Y side of the body (in the
+# render frame, after orient()), so a -Y camera (the example, and every
+# other layout's default) looks at the wall *without* any mechanism on
+# it. Measured (alpha-masked, opaque pixels only) while tuning:
+#   (0.1, -1.0, 0.5)  0.072%   (0.1, -1.0, 1.2)  0.084%
+#   (0.6, -0.8, 1.0)  0.092%   (0.0,  0.0,  1.0)  0.065%
+#   (0.0,  0.3, 1.6)  0.112%   (0.0,  0.45, 1.5)  0.137%  <- chosen
+# Every view with a *larger* +Y component (tried up to (0.1, 1.0, 1.2),
+# 1.58%) exposes far more mechanism but also a sharp-edged magenta/grey
+# speckle on the outer wall that grows with the +Y component and persists
+# across very different elevations — a stable, parallax-consistent
+# artifact (almost certainly near-coincident body/mechanism surfaces in
+# the source CAD, not camera-angle noise), not something `view` tuning
+# can dodge past this point. 0.137% is the most magenta obtained with no
+# such artifact visible (checked at 2x-4x crops, not just the full frame).
+CONCEPT_VIEWS = {"drawstring": (0.0, 0.45, 1.5)}
 
 SCENES = {}
 for slug, groups in CONCEPT_GROUPS.items():
     SCENES[f"concept-{slug}"] = Scene(
         name=f"concept-{slug}", groups=groups,
-        layout=CONCEPT_LAYOUT_OVERRIDES.get(
-            slug, "assembled" if len(groups) == 1 else "flat-lay"),
-        caption=CONCEPT_CAPTIONS[slug])
+        layout="assembled" if len(groups) == 1 else "flat-lay",
+        caption=CONCEPT_CAPTIONS[slug],
+        view=CONCEPT_VIEWS.get(slug))
 
 SCENES.update({
     "flower-low": Scene("flower-low", (FLOWER_LOW,), "assembled",
