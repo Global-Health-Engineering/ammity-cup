@@ -1,0 +1,21 @@
+{
+  "name": "ammity-cup-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GitHub Pages site for SpaceCup, an open-source silicone menstrual cup that seals before extraction, for menstruation in reduced gravity.",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "keywords": [],
+  "author": "ETH Zurich, Global Health Engineering",
+  "license": "CC-BY-4.0",
+  "dependencies": {
+    "astro": "^5.18.2",
+    "three": "^0.180.0"
+  }
+}

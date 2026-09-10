@@ -1,0 +1,96 @@
+/* Design tokens, GHE brand palette. The page is light-only by deliberate
+   choice: the figures and renders are authored for a white background, so
+   there is no dark theme, no OS-preference rule and no toggle. Do not add
+   a `@media (prefers-color-scheme: dark)` block or a `data-theme` variant
+   here without re-authoring site/public/figures/*.svg to match. */
+:root {
+  --ghe-magenta: #873671;
+  --ghe-blue: #457ec1;
+  --ghe-red: #bf181a;
+  --ghe-black: #000000;
+  --ghe-white: #ffffff;
+  --ghe-grey: #d1d1d1;
+
+  --bg: #ffffff;
+  --bg-2: #f6f7f9;
+  --line: #e3e6ea;
+  --fg: #1a1d21;
+  --fg-dim: #52585f;
+  --accent: var(--ghe-magenta);
+  --accent-2: #3f6ba0;
+
+  --radius: 10px;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Inter", "Segoe UI", sans-serif;
+  --serif: ui-serif, "Source Serif Pro", Georgia, serif;
+  --mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, monospace;
+
+  /* The one content width for the whole page, every block (section,
+     paragraph, heading, table, figure, image grid, stat card, footer
+     block) shares this box width so the left/right edge never shifts as
+     the reader scrolls. Do not add a second max-width for "wide"
+     content; a wide table stays at this width and scrolls internally
+     (see .scroll-x) instead of growing the page. */
+  --content-width: 800px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+/* Light is the only colour scheme, form controls, scrollbars and the
+   canvas must not follow the OS preference. */
+html { color-scheme: light; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Section padding and heading scale are tuned for information density
+   (an engineering reference, not a landing page), while keeping body copy
+   at a comfortable reading size (16px / 1.6) and line length (60-75ch). */
+section {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 52px 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+h1, h2, h3 {
+  font-family: var(--serif);
+  font-weight: 600;
+  letter-spacing: -.01em;
+  margin: 0;
+  color: var(--fg);
+}
+h1 { font-size: clamp(28px, 4vw, 40px); line-height: 1.15; }
+h2 { font-size: clamp(21px, 2.6vw, 27px); margin-bottom: 8px; }
+h3 { font-size: 18px; }
+
+/* No character-count cap here: a narrower measure than the section's own
+   content box is exactly the "narrow, then wide, then narrow again" edge
+   drift this page had before, every block, prose included, now shares
+   --content-width instead. */
+p { color: var(--fg-dim); margin: 0 0 14px; }
+
+a { color: var(--accent); }
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+img { max-width: 100%; height: auto; }
+
+.scroll-x { overflow-x: auto; }
+
+table { border-collapse: collapse; width: 100%; }
+th, td { border-bottom: 1px solid var(--line); padding: 8px 12px; text-align: left; }
+
+code, pre { font-family: var(--mono); }

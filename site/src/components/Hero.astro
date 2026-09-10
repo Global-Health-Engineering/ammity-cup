@@ -1,0 +1,100 @@
+---
+import site from '../data/site.json';
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+---
+<section id="hero" class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow">CERN-OHL-P v2 · CC BY 4.0 · research prototype</div>
+    <h1>{site.tagline}</h1>
+    <p class="hero-meta">
+      {site.project}: {site.project_expansion} · flown on {site.flight.campaign} parabolic flights · printed moulds, cast silicone
+    </p>
+    <p class="lead">
+      In reduced gravity, menstrual fluid is held by surface tension and adhesion
+      rather than drained by weight. The SpaceCup is a reusable silicone cup with
+      a mechanism that closes its opening before the cup is removed. Seven
+      closing mechanisms were designed and six bench-tested; the two Flower designs
+      scored highest ({site.bench.flower_score}/{site.bench.score_max}), and
+      {site.flight.design_flown} was flown.
+    </p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href={site.repo}>Get the files on GitHub →</a>
+      <a class="btn btn-ghost" href="#background">Background</a>
+    </div>
+    <p class="hero-secondary">
+      Every part is cast from 3D-printed moulds; the mould files, the editable
+      CAD and the casting guide are all in the repository.
+    </p>
+  </div>
+  <figure class="hero-photo">
+    <img
+      src={`${base}/renders/flower-low.png`}
+      alt="Render of the Flower Low SpaceCup: a grey silicone cup with five magenta petals at its opening; their silicone pull strings, which join the pull mechanism in the stem, are shown straight, as cast."
+      width="2000" height="2000" loading="eager"
+    />
+    <figcaption>Flower Low, the design flown on the parabolic flights (render).</figcaption>
+  </figure>
+</section>
+
+<style>
+  .hero {
+    padding-top: 40px;
+  }
+  .hero-copy { min-width: 0; }
+  .hero h1 { margin: 14px 0 12px; }
+  .hero-meta {
+    font-family: var(--mono);
+    font-size: 14px;
+    letter-spacing: .01em;
+    color: var(--accent-2);
+    margin: 0 0 18px;
+  }
+  .hero .lead { font-size: 17px; }
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin: 24px 0 18px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 11px 20px;
+    border-radius: 999px;
+    font-size: 14.5px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .btn-primary { background: var(--accent); color: var(--ghe-white); }
+  .btn-primary:hover { opacity: .9; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--fg);
+    border: 1px solid var(--line);
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .hero-secondary {
+    font-size: 13.5px;
+    color: var(--fg-dim);
+    margin: 0;
+  }
+  .hero-photo {
+    margin: 28px 0 0;
+    min-width: 0;
+  }
+  .hero-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--bg-2);
+  }
+  .hero-photo figcaption {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--fg-dim);
+  }
+</style>

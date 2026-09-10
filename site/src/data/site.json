@@ -1,0 +1,43 @@
+{
+  "name": "SpaceCup",
+  "project": "AMMITY",
+  "project_expansion": "Advancements for Menstrual blood Management in reduced gravITY",
+  "tagline": "An open-source silicone menstrual cup that seals before extraction, for menstruation in reduced gravity",
+  "repo": "https://github.com/Global-Health-Engineering/ammity-cup",
+  "version": "1.0.0",
+  "flight": {
+    "campaign": "Asclepios",
+    "reduced_gravity_s": 6,
+    "design_flown": "Flower Low"
+  },
+  "bench": {
+    "variants_scored": 6,
+    "flower_score": 24,
+    "score_max": 25,
+    "flower_low_ml": 18,
+    "flower_high_ml": 30,
+    "target_ml": 12,
+    "cycles": 30
+  },
+  "base_cup": {
+    "wall_mm": 2,
+    "rim_od_mm": "41–44",
+    "length_mm": "45–55",
+    "stem_min_mm": 15,
+    "capacity_ml": "20–30"
+  },
+  "moulding": {
+    "infill_pct": 15,
+    "layer_height_mm": "0.15–0.2",
+    "wall_lines": 5,
+    "mould_material_hot_cure": "ASA",
+    "vent_mm": 0.5,
+    "key_mm": 3
+  },
+  "silicones": [
+    { "name": "Smooth-Sil 945", "maker": "Smooth-On", "use": "cup body (prototypes)", "cure": "6 h" },
+    { "name": "Rebound 25", "maker": "Smooth-On", "use": "flexible sections" },
+    { "name": "Smooth-Sil 960", "maker": "Smooth-On", "use": "rigid sections" },
+    { "name": "ELASTOSIL LR 5040/45 A/B", "maker": "WACKER Chemie AG", "use": "medical-grade prototype (Flower Low)", "cure": "about 2 h at 100 °C", "hardness": "about Shore 45 A" }
+  ]
+}

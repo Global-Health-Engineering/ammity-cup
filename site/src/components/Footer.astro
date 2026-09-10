@@ -1,0 +1,83 @@
+---
+import site from '../data/site.json';
+
+const licences = [
+  { component: 'Hardware design (NX, STEP, mould STL in hardware/)', licence: 'CERN-OHL-P v2', href: `${site.repo}/blob/main/LICENSE-CERN-OHL-P-2.0.md` },
+  { component: 'Documentation, data and this site', licence: 'CC BY 4.0', href: `${site.repo}/blob/main/LICENSE-CC-BY-4.0.md` },
+];
+
+const authors = [
+  'Kim Keller',
+  'Marion Dugué',
+  'Jakub Tkaczuk',
+  'Elizabeth Tilley',
+];
+---
+<section id="cite" class="footer-section">
+  <div class="eyebrow">Licence and citation</div>
+  <div class="cite-stack">
+    <div class="licence-block">
+      <h3>Licences</h3>
+      <div class="scroll-x">
+        <table>
+          <thead><tr><th>Component</th><th>Licence</th></tr></thead>
+          <tbody>
+            {licences.map((l) => (
+              <tr><td>{l.component}</td><td><a href={l.href}>{l.licence}</a></td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="cite-block">
+      <h3>Citation</h3>
+      <p>
+        If you use this hardware, please cite it. Full machine-readable
+        metadata: <a href={`${site.repo}/blob/main/CITATION.cff`}>CITATION.cff</a>.
+      </p>
+      <p class="citation-text">
+        {site.name} ({site.project}): an open-source menstrual cup that seals
+        before extraction, for menstruation in reduced gravity.{' '}
+        {authors.join(', ')}. ETH Zurich, Global Health Engineering.
+        Version {site.version}. {site.repo}
+      </p>
+    </div>
+
+    <div class="ack-block">
+      <h3>Acknowledgements</h3>
+      <p>
+        The parabolic-flight experiments were flown by the analogue astronauts
+        of the Asclepios mission. Medical-grade silicone was donated by
+        WACKER Chemie AG. Medical input was provided by Dr. Cornelia Betschart.
+        The team also thanks CNES for sharing their expertise in human
+        spaceflight and space medicine.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Licence above citation, both at the page's single content width, no
+     side-by-side grid. The GHE/ETH logo is deliberately not repeated
+     here: it already appears once, in the top navigation banner. */
+  .footer-section { padding-bottom: 48px; }
+  .cite-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  h3 { margin-bottom: 8px; }
+  .citation-text {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.6;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  .cite-block, .licence-block, .ack-block { min-width: 0; }
+</style>

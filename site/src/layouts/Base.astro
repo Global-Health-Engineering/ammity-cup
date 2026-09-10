@@ -1,0 +1,279 @@
+---
+import site from '../data/site.json';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+// BASE_URL is '/ammity-cup' in production (no guaranteed trailing slash, do
+// not assume one when joining paths) and '/' in dev.
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+const homeHref = base === '' ? '/' : base;
+const logoSrc = `${base}/brand/ETH_GHE_logo.svg`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+const navLinks = [
+  { href: '#background', label: 'Background' },
+  { href: '#device', label: 'Device' },
+  { href: '#mechanisms', label: 'Mechanisms' },
+  { href: '#make', label: 'Make' },
+  { href: '#use', label: 'Use' },
+  { href: '#validation', label: 'Validation' },
+  { href: '#limits', label: 'Limitations' },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="generator" content={Astro.generator} />
+
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-nav">
+      <a class="brand" href={homeHref} aria-label={`${site.name} home`}>
+        <img class="brand-logo" src={logoSrc} alt="Global Health Engineering, ETH Zurich" height="18" />
+        <span class="brand-name">{site.name}</span>
+      </a>
+      <nav aria-label="Sections">
+        <ul>
+          {navLinks.map((link) => (
+            <li><a href={link.href}>{link.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <ul class="footer-links">
+        <li><a href="https://ghe.ethz.ch">Global Health Engineering Group at ETH Zurich</a></li>
+        <li><a href={site.repo}>GitHub</a></li>
+        <li><a href="https://matrix.to/#/#ghe-open:staffchat.ethz.ch">Matrix #ghe-open</a></li>
+        <li><a href={`mailto:ghe@mavt.ethz.ch?subject=${site.name}`}>ghe@mavt.ethz.ch</a></li>
+      </ul>
+    </footer>
+
+    <!--
+      Active-section highlighting, progressive enhancement only. Anchor
+      links already work with no JS at all, so this script's entire job is
+      to add a visual "you are here" cue on top of that; if IntersectionObserver
+      is unavailable it simply does nothing and the nav degrades to plain
+      links, which is why the very first line is a feature check with an
+      early return rather than a polyfill or fallback path.
+    -->
+    <script is:inline>
+      (function () {
+        if (!('IntersectionObserver' in window)) return;
+        var nav = document.querySelector('.site-nav nav');
+        if (!nav) return;
+        var links = Array.prototype.slice.call(nav.querySelectorAll('a[href^="#"]'));
+        if (!links.length) return;
+
+        var sections = links
+          .map(function (l) { return document.querySelector(l.getAttribute('href')); })
+          .filter(Boolean);
+        if (!sections.length) return;
+
+        var current = null;
+        function setActive(hash) {
+          if (hash === current) return;
+          current = hash;
+          links.forEach(function (l) {
+            var isActive = l.getAttribute('href') === hash;
+            l.classList.toggle('active', isActive);
+            if (isActive) {
+              l.setAttribute('aria-current', 'true');
+              // Keeps the active item visible when the nav itself scrolls
+              // horizontally at mobile width (see .site-nav nav in the
+              // stylesheet below); 'nearest' on the block axis leaves the
+              // page's own vertical scroll position untouched.
+              l.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+            } else {
+              l.removeAttribute('aria-current');
+            }
+          });
+        }
+
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) setActive('#' + entry.target.id);
+            });
+          },
+          // A section counts as "current" once its top has crossed the
+          // upper part of the viewport and before its bottom has crossed
+          // the lower part, i.e. while it is the section actually being
+          // read, not merely anywhere on screen.
+          { rootMargin: '-15% 0px -70% 0px', threshold: 0 }
+        );
+        sections.forEach(function (s) { observer.observe(s); });
+      })();
+    </script>
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    left: -999px;
+    top: 0;
+    background: var(--accent);
+    color: var(--ghe-white);
+    padding: 8px 16px;
+    z-index: 100;
+  }
+  .skip-link:focus {
+    left: 0;
+  }
+
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 12px 24px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--fg);
+    min-width: 0;
+  }
+  .brand-logo {
+    display: block;
+    border-radius: 3px;
+    /* Sized by HEIGHT, not width. The `height="18"` HTML attribute cannot
+       do this on its own: the global `img { height: auto }` rule in
+       global.css outranks a presentational attribute, so the attribute was
+       being ignored and the only thing sizing the mark was a `max-width:
+       30vw` cap, which made it grow with the viewport (~72px tall at
+       1600px, dwarfing the 13.5px nav links) and collapse on mobile
+       (~17px at 375px, where the three-line "GLOBAL HEALTH ENGINEERING"
+       lockup is unreadable).
+
+       clamp() pins both ends: 55px on a wide screen, never below 30px,
+       tracking the viewport only in between. Width follows from the SVG's
+       499x78 aspect ratio. flex-shrink is left on so a very narrow header
+       squeezes this box rather than overflowing the page; object-fit then
+       scales the mark down inside it instead of distorting it. */
+    flex-shrink: 1;
+    min-width: 0;
+    height: clamp(30px, 3.2vw, 55px);
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+  }
+  .brand-name {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -.01em;
+    white-space: nowrap;
+  }
+  .site-nav nav {
+    flex: 1;
+    overflow-x: auto;
+    /* `flex: 1` alone gives this element only left-over space (its
+       flex-basis is 0%): if .brand alone already consumes the full row
+       (which the logo lockup plus the wordmark can do well before mobile
+       widths), there is no "left over" space and nav silently collapses
+       to 0 width, hiding every link with no visual trace. The min-width
+       forces the flex algorithm to take that space from .brand instead
+       (see the .brand-name mobile rule below, which removes the
+       wordmark entirely below 600px so there is room to give). */
+    min-width: 90px;
+  }
+  .site-nav nav ul {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+  }
+  .site-nav nav a {
+    display: inline-block;
+    color: var(--fg-dim);
+    text-decoration: none;
+    font-size: 13.5px;
+    border-bottom: 2px solid transparent;
+    padding: 2px 0;
+  }
+  .site-nav nav a:hover {
+    color: var(--accent);
+  }
+  .site-nav nav a.active {
+    color: var(--accent);
+    font-weight: 600;
+    border-bottom-color: var(--accent);
+  }
+
+  main {
+    display: block;
+  }
+
+  .site-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 24px;
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 36px 24px 56px;
+  }
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .footer-links a {
+    color: var(--fg-dim);
+    text-decoration: none;
+    font-size: 14px;
+  }
+  .footer-links a:hover {
+    color: var(--accent);
+  }
+
+  /* Below 600px the wordmark next to the logo lockup leaves no room for
+     the section nav at all (see the comment on .site-nav nav above), so
+     the wordmark drops and spacing tightens to give the
+     horizontally-scrolling nav real width to work with, required for it
+     to be usable, not just cosmetic. */
+  @media (max-width: 600px) {
+    .site-nav {
+      gap: 12px;
+      padding: 10px 16px;
+    }
+    .brand-name {
+      display: none;
+    }
+  }
+</style>

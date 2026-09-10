@@ -1,0 +1,71 @@
+---
+import site from '../data/site.json';
+---
+<section id="background">
+  <div class="eyebrow">Background</div>
+  <h2>Background</h2>
+  <p class="lead">
+    Menstruation in space is currently managed mainly by hormonal suppression.
+    On long missions that depends on drug storage, mission length that may
+    change, and in some cases refrigeration. Tampons create waste, and pads
+    rely on gravity to hold fluid against the body.
+  </p>
+  <div class="stat-row">
+    <div class="stat">
+      <div class="num">~{site.flight.reduced_gravity_s} s</div>
+      <div class="label">of reduced gravity per parabola, the test window on each flight</div>
+    </div>
+    <div class="stat">
+      <div class="num">{site.bench.target_ml} mL</div>
+      <div class="label">containment target, from 2–12 mL collected over 8 hours</div>
+    </div>
+  </div>
+  <p>
+    A menstrual cup is reusable and holds fluid instead of absorbing it, but
+    in microgravity surface tension and adhesion dominate how the fluid
+    behaves, so a conventional open cup cannot be relied on to keep it inside
+    during removal. The SpaceCup adds a closing mechanism that seals the
+    opening first, operable one-handed with two fingers.
+  </p>
+  <p>
+    The work set out to answer three questions: which sealing mechanism,
+    material and geometry give the best usability, manufacturability and
+    anatomical fit; whether it contains fluid under reduced gravity; and how
+    it can be cleaned where water is scarce. It builds on a base cup defined
+    in a 2025 bachelor thesis at the same group (wall {site.base_cup.wall_mm} mm,
+    rim outer diameter {site.base_cup.rim_od_mm} mm, length {site.base_cup.length_mm} mm
+    without stem, capacity {site.base_cup.capacity_ml} mL).
+  </p>
+</section>
+
+<style>
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin: 24px 0 28px;
+  }
+  .stat {
+    padding: 20px 22px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .stat .num {
+    font-family: var(--serif);
+    font-size: 32px;
+    line-height: 1;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .stat .label {
+    font-size: 14px;
+    color: var(--fg-dim);
+    line-height: 1.45;
+    max-width: none;
+  }
+
+  @media (max-width: 560px) {
+    .stat-row { grid-template-columns: 1fr; }
+  }
+</style>
