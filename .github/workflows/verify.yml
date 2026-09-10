@@ -1,0 +1,82 @@
+name: Verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Python test suite
+        # OCP and Blender are not installed in CI: tests that need them, or
+        # the git-ignored incoming/ and build/ trees, skip themselves.
+        run: python3 -m pytest tools/tests -v
+
+      - name: Mould STLs are millimetres
+        run: python3 tools/verify_units.py "hardware/*/mould-stl/*.stl"
+
+      - name: No out-of-scope files
+        run: python3 tools/verify_scope.py
+
+      - name: No unsupported claims (docs and site source)
+        run: python3 tools/verify_copy.py
+
+      - name: No personal data (tracked text files)
+        run: python3 tools/verify_privacy.py
+
+      - name: Repository size under 100 MB (tracked files)
+        run: |
+          # Measures tracked files only (git ls-files), not the whole
+          # working tree. `du -sm .` would also count node_modules/ and
+          # site/dist/ once the site build below has run, both are
+          # git-ignored build output, not repository content, and
+          # node_modules/ alone is ~150 MB, which would make this gate
+          # fail for a reason that has nothing to do with what ships.
+          git ls-files -z | xargs -0 du -k > /tmp/tracked_sizes.txt
+          echo "Largest tracked paths:"
+          sort -rn /tmp/tracked_sizes.txt | head -15 | awk '{printf "  %8.2f MB  %s\n", $1/1024, $2}'
+          size_kb=$(awk '{sum += $1} END {print sum + 0}' /tmp/tracked_sizes.txt)
+          size_mb=$((size_kb / 1024))
+          echo
+          echo "tracked repository size: ${size_mb} MB (budget: 100 MB)"
+          if [ "$size_mb" -ge 100 ]; then
+            echo
+            echo "ERROR: tracked files total ${size_mb} MB, at or over the 100 MB budget."
+            echo "The largest tracked paths are listed above, trim, re-encode, or Git LFS one of those before merging."
+            exit 1
+          fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: site/package-lock.json
+
+      - name: Install site dependencies
+        working-directory: site
+        run: npm ci
+
+      - name: Build site
+        working-directory: site
+        run: npm run build
+
+      - name: No unsupported claims (built site)
+        run: python3 tools/verify_copy.py "site/dist/**/*.html" "site/dist/**/*.css" "site/dist/**/*.js"
+
+      - name: No personal data (built site)
+        run: python3 tools/verify_privacy.py "site/dist/**/*.html"
+
+      - name: Built page has every section and asset
+        run: python3 -m pytest tools/tests/test_site_build.py -v
