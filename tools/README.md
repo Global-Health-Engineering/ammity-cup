@@ -12,7 +12,7 @@ No figure is a one-off screenshot.
 | `verify_privacy.py` | CI gate, fails if participant names, personal paths or email addresses reach the docs or the built site |
 | `rename.py` | The old-to-new file-name mapping in [`../hardware/README.md`](../hardware/README.md#rename-map) (library) |
 | `step_to_mesh.py` | Meshes converted from the STEP files, input to `render_parts.py` |
-| `parts.py` | The parts list walked by `step_to_mesh.py` and `render_parts.py` (library) |
+| `parts.py` | Scene manifest: which meshed solids make up each render, their role (colour), orientation and mirroring; read by `render_parts.py`, and by `tools/tests/test_parts.py`, which checks orientation against `build/meshes/` (library) |
 | `render_parts.py` | `site/public/renders/*.png` and `site/public/models/*.glb` (requires Blender) |
 
 ## CI
