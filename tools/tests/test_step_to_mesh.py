@@ -26,20 +26,31 @@ def test_write_stl_normals_follow_winding(tmp_path):
     centroids = tris.mean(axis=1) - 5.0
     assert (np.einsum("ij,ij->i", normals, centroids) > 0).all()
 
-def _box_step(tmp_path, boxes):
+def _shapes_to_step(tmp_path, shapes, name="shapes.step"):
     pytest.importorskip("OCP")
-    from OCP.BRepPrimAPI import BRepPrimAPI_MakeBox
     from OCP.BRep import BRep_Builder
     from OCP.TopoDS import TopoDS_Compound
     from OCP.STEPControl import STEPControl_Writer, STEPControl_AsIs
-    from OCP.gp import gp_Pnt
     builder, comp = BRep_Builder(), TopoDS_Compound()
     builder.MakeCompound(comp)
-    for (x, y, z, dx, dy, dz) in boxes:
-        builder.Add(comp, BRepPrimAPI_MakeBox(gp_Pnt(x, y, z), dx, dy, dz).Shape())
+    for shape in shapes:
+        builder.Add(comp, shape)
     w = STEPControl_Writer(); w.Transfer(comp, STEPControl_AsIs)
-    path = str(tmp_path / "boxes.step"); w.Write(path)
+    path = str(tmp_path / name); w.Write(path)
     return path
+
+def _box_step(tmp_path, boxes):
+    pytest.importorskip("OCP")
+    from OCP.BRepPrimAPI import BRepPrimAPI_MakeBox
+    from OCP.gp import gp_Pnt
+    shapes = [BRepPrimAPI_MakeBox(gp_Pnt(x, y, z), dx, dy, dz).Shape() for (x, y, z, dx, dy, dz) in boxes]
+    return _shapes_to_step(tmp_path, shapes, name="boxes.step")
+
+def signed_volume_mm3(tris):
+    """sum(dot(v0, cross(v1, v2))) / 6 over all triangles. Positive and
+    equal to the enclosed volume for a closed, outward-wound mesh."""
+    v0, v1, v2 = tris[:, 0], tris[:, 1], tris[:, 2]
+    return float(np.einsum("ij,ij->i", v0, np.cross(v1, v2)).sum() / 6.0)
 
 def test_mesh_step_one_record_per_solid(tmp_path):
     from tools.step_to_mesh import mesh_step
@@ -59,6 +70,24 @@ def test_mesh_step_is_deterministic(tmp_path):
     mesh_step(step, str(tmp_path / "a")); mesh_step(step, str(tmp_path / "b"))
     assert open(tmp_path / "a" / "solid-0.stl", "rb").read() == open(tmp_path / "b" / "solid-0.stl", "rb").read()
 
+def _assert_outward_and_volume_matches(out_dir, recs):
+    for r in recs:
+        tris, _ = read_stl(os.path.join(out_dir, r["file"]))
+        vol = signed_volume_mm3(tris)
+        assert vol > 0
+        assert abs(vol / 1000.0 - r["volume_cm3"]) / r["volume_cm3"] < 0.02
+
+def test_mesh_step_winding_is_outward(tmp_path):
+    pytest.importorskip("OCP")
+    from OCP.BRepPrimAPI import BRepPrimAPI_MakeCylinder
+    from tools.step_to_mesh import mesh_step
+    box_step = _box_step(tmp_path, [(0, 0, 0, 10, 20, 30)])
+    cyl_step = _shapes_to_step(tmp_path, [BRepPrimAPI_MakeCylinder(5.0, 10.0).Shape()], name="cyl.step")
+    for step, out_name in [(box_step, "box_out"), (cyl_step, "cyl_out")]:
+        out_dir = str(tmp_path / out_name)
+        recs = mesh_step(step, out_dir)
+        _assert_outward_and_volume_matches(out_dir, recs)
+
 FLOWER = os.path.join(ROOT, "hardware", "flower-low", "step", "flower-cup-withrim-part.step")
 
 @pytest.mark.skipif(not os.path.exists(FLOWER), reason="hardware not imported")
@@ -69,3 +98,11 @@ def test_real_flower_low_has_six_solids(tmp_path):
     assert len(recs) == 6
     body = [r for r in recs if r["volume_cm3"] > 5.0]
     assert len(body) == 3   # two cup-body halves + the petal/string solid
+
+@pytest.mark.skipif(not os.path.exists(FLOWER), reason="hardware not imported")
+def test_real_flower_low_winding_is_outward(tmp_path):
+    pytest.importorskip("OCP")
+    from tools.step_to_mesh import mesh_step
+    out_dir = str(tmp_path)
+    recs = mesh_step(FLOWER, out_dir)
+    _assert_outward_and_volume_matches(out_dir, recs)

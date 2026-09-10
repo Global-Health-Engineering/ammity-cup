@@ -88,6 +88,8 @@ def _solid_triangles(solid):
                 idx = idx[:, [0, 2, 1]]
             chunks.append(nodes[idx])
         faces.Next()
+    if not chunks:
+        raise ValueError("solid has no triangulated faces")
     return np.concatenate(chunks)
 
 
@@ -105,10 +107,13 @@ def mesh_step(step_path, out_dir):
     solids = TopExp_Explorer(shape, TopAbs_SOLID)
     while solids.More():
         solid = _static(TopoDS, "Solid")(solids.Current())
-        tris = _solid_triangles(solid)
+        i = len(records)
+        try:
+            tris = _solid_triangles(solid)
+        except ValueError as exc:
+            raise ValueError(f"{step_path}: solid {i}: {exc}") from exc
         props = GProp_GProps()
         _static(BRepGProp, "VolumeProperties")(solid, props)
-        i = len(records)
         name = f"solid-{i}.stl"
         write_stl(os.path.join(out_dir, name), tris)
         pts = tris.reshape(-1, 3)
