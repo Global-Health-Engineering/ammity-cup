@@ -1,5 +1,9 @@
+import os
+
 import pytest
-from tools.verify_copy import scan_file, find_files, main
+from tools.verify_copy import DEFAULT_PATTERNS, scan_file, find_files, main
+
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def write(p, text):
     p.write_text(text); return str(p)
@@ -43,3 +47,25 @@ def test_main_exit_codes(tmp_path):
     bad = write(tmp_path / "b.md", "FDA approved\n")
     assert main([good]) == 0
     assert main([bad]) == 1
+
+
+def test_default_patterns_cover_every_shipped_public_text_location():
+    # The release gate must widen to every place public copy ships, not
+    # just docs/ and the site source. Pick one representative file from
+    # each category and confirm the defaults actually reach it.
+    expected = [
+        "README.md",
+        "CITATION.cff",
+        ".zenodo.json",
+        "data/README.md",
+        "hardware/README.md",
+        "tools/README.md",
+    ]
+    cwd = os.getcwd()
+    try:
+        os.chdir(ROOT)
+        matched = find_files(DEFAULT_PATTERNS)
+    finally:
+        os.chdir(cwd)
+    for path in expected:
+        assert path in matched, f"{path} not covered by DEFAULT_PATTERNS"

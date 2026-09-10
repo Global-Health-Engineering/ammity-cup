@@ -32,23 +32,33 @@ BANNED_PHRASES = [
 # the exact patterns: "not a certified medical device" or "does not make <1-4 words> a certified medical device".
 _NEGATED = re.compile(r"(?:\bnot an?|\bdoes not make(?:\s+[\w-]+){1,4}\s+an?)\s+certified medical device")
 
-# Scanned when no paths are given on the command line: every markdown page
-# plus the Astro site *source* (components, layouts, and the copy-holding
-# site.json). This catches banned phrasing at the point someone would
-# actually type it. It is deliberately not sufficient on its own; see
-# tools/README.md and .github/workflows/verify.yml, where a second
-# invocation scans the *built* site/dist/**/*.html, because the built HTML
-# is what actually ships and could in principle differ from any single
-# source file (e.g. text assembled across a template and a data file).
+# Scanned when no paths are given on the command line: every shipped
+# markdown page (README, docs/, hardware/, data/, tools/, the site's own
+# ASSETS.md), the CSV data files, the citation metadata (CITATION.cff,
+# .zenodo.json), and the Astro site *source* (components, layouts, and the
+# copy-holding site.json). This catches banned phrasing at the point
+# someone would actually type it. It is deliberately not sufficient on its
+# own; see tools/README.md and .github/workflows/verify.yml, where a
+# second invocation scans the *built* site/dist/**/*, because the built
+# site is what actually ships and could in principle differ from any
+# single source file (e.g. text assembled across a template and a data
+# file).
 DEFAULT_PATTERNS = [
     "README.md",
     "docs/**/*.md",
+    "hardware/**/*.md",
+    "data/README.md",
+    "data/*.csv",
+    "tools/README.md",
+    "site/public/ASSETS.md",
+    "CITATION.cff",
+    ".zenodo.json",
     "site/src/**/*.astro",
     "site/src/**/*.md",
     "site/src/**/*.json",
 ]
 
-TEXT_SUFFIXES = (".md", ".astro", ".json", ".html", ".mdx", ".txt", ".css", ".js")
+TEXT_SUFFIXES = (".md", ".astro", ".json", ".html", ".mdx", ".txt", ".css", ".js", ".cff", ".csv")
 
 
 def find_files(patterns):

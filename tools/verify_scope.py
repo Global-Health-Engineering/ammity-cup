@@ -6,8 +6,8 @@ Never tracked here: the thesis itself (not released, D4), the flight
 questionnaires and the training slides (they name the analogue astronauts
 and carry a personal email address), NX/STEP translation logs (they embed
 the author's local Windows path), planning content, intermediate meshes,
-raw video, and any OSHWA certification artwork (the project is not
-certified, D8).
+raw video, and any certification artwork the project is not entitled to
+display (the project is not certified, D8).
 
 Only paths Git tracks are checked (`git ls-files`), so the staging
 directory incoming/, which is git-ignored, never trips it; anything
@@ -29,8 +29,8 @@ BANNED_SUBSTRINGS = {
     "questionaire": "questionnaires name participants; ship data/flight-questionnaire.csv instead",
     "questionnaire": "questionnaires name participants; ship data/flight-questionnaire.csv instead",
     "training slides": "the slides carry a personal email address",
-    "certification-mark": "the project is not OSHWA-certified",
-    "oshwa": "the project is not OSHWA-certified",
+    "certification-mark": "the project is not entitled to display this certification mark",
+    "oshwa": "the project is not entitled to display this certification mark",
 }
 
 BANNED_PATH_PREFIXES = [
