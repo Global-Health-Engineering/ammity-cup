@@ -108,7 +108,7 @@ export function createViewer(container) {
     // The model appeared jammed into a corner and the centre of rotation,
     // being the centre of the real canvas, sat off-screen. It looked
     // correct at 1x, which is exactly why it survived the first round of
-    // testing; see the CSS in Device.astro for the belt-and-braces cap.
+    // testing; see the CSS in ModelDialog.astro for the belt-and-braces cap.
     renderer.setSize(w, h);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
@@ -116,8 +116,8 @@ export function createViewer(container) {
 
   // Frame whatever was loaded from its own bounding sphere rather than
   // from hardcoded distances: the three models differ in size by more
-  // than an order of magnitude (a whole exploded assembly vs a 37 mm
-  // filter support), and their glTF units are millimetres-as-metres.
+  // than an order of magnitude (a whole exploded assembly vs a single
+  // small part), and their glTF units are millimetres-as-metres.
   function frame() {
     const box = new Box3().setFromObject(model);
     const size = box.getSize(new Vector3());
@@ -150,8 +150,8 @@ export function createViewer(container) {
     // Bound the scroll so a reader cannot zoom through the geometry and
     // lose the model, nor zoom out until it is a speck. The near bound is
     // deliberately well inside the bounding sphere: the details worth
-    // opening a 3D view for (the sealing ridge, the strand mesh) are
-    // small features on a much larger part.
+    // opening a 3D view for, such as the sealing ridge, are small
+    // features on a much larger part.
     controls.minDistance = radius * 0.3;
     controls.maxDistance = distance * 2.2;
     controls.update();

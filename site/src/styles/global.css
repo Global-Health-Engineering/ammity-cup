@@ -2,7 +2,7 @@
    choice: the figures and renders are authored for a white background, so
    there is no dark theme, no OS-preference rule and no toggle. Do not add
    a `@media (prefers-color-scheme: dark)` block or a `data-theme` variant
-   here without re-authoring site/public/figures/*.svg to match. */
+   here without re-authoring site/public/renders/*.png to match. */
 :root {
   --ghe-magenta: #873671;
   --ghe-blue: #457ec1;

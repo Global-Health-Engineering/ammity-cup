@@ -67,7 +67,7 @@ class Scene:
     resolution: int = 800
     uniform_role: str = None
     # Fix round 2: an optional camera-direction override, (x, y, z) in the
-    # world frame *after* each group's own orientation (see UP_TO_Z) — the
+    # world frame *after* each group's own orientation (see UP_TO_Z), the
     # same frame `view` variables inside render_parts.build() already use.
     # None (every scene but concept-drawstring) keeps today's per-layout
     # default (ISO, or the flatter flat-lay/section angles); render_parts
@@ -154,7 +154,7 @@ CONCEPT_CAPTIONS = {
 # Every view with a *larger* +Y component (tried up to (0.1, 1.0, 1.2),
 # 1.58%) exposes far more mechanism but also a sharp-edged magenta/grey
 # speckle on the outer wall that grows with the +Y component and persists
-# across very different elevations — a stable, parallax-consistent
+# across very different elevations, a stable, parallax-consistent
 # artifact (almost certainly near-coincident body/mechanism surfaces in
 # the source CAD, not camera-angle noise), not something `view` tuning
 # can dodge past this point. 0.137% is the most magenta obtained with no

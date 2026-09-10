@@ -66,7 +66,7 @@ def reset():
     scene.render.image_settings.color_mode = "RGBA"
     # Blender 5.2 defaults to the AgX view transform, which rolls off
     # highlights and desaturates strongly, it turned the intended muted
-    # teal/ochre/terracotta of the membrane-clamp figure into washed-out
+    # role colours of an earlier test render into washed-out
     # pastels, and likely made the original near-white plastic look even
     # paler than its base colour alone would. Standard renders the
     # material's base colour with predictable, non-filmic contrast, which
@@ -244,7 +244,7 @@ def frame_camera(center, radius, direction, lens=85, margin=1.15):
     cam_data.lens = lens
     cam_data.sensor_width = SENSOR_WIDTH
     # Blender's default near-clip (0.1 m) silently clips the entire
-    # subject out of a tight close-up: the membrane-clamp crop sits the
+    # subject out of a tight close-up: a tight section crop sits the
     # camera ~70 mm from its focus, inside that default, which produced a
     # fully transparent render with no error. 1 mm is safe at every scale
     # this script uses.
@@ -462,7 +462,7 @@ def place(objs, x_start):
 FLAT_LAY_GAP_MM = 12
 
 # Fix round 1: lighting()'s fill_strength default (3.0) was written for a
-# tight crop right on the cut interface (3DPLAM's membrane-clamp shot,
+# tight crop right on the cut interface (3DPLAM's own tight section shot,
 # where the cut face fills most of the frame and the light barely spills
 # past it). Section here frames the *whole* cup, so that same strength
 # also floods the already-lit outer wall and the mechanism, not just the
