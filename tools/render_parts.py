@@ -461,6 +461,20 @@ def place(objs, x_start):
 
 FLAT_LAY_GAP_MM = 12
 
+# Fix round 1: lighting()'s fill_strength default (3.0) was written for a
+# tight crop right on the cut interface (3DPLAM's membrane-clamp shot,
+# where the cut face fills most of the frame and the light barely spills
+# past it). Section here frames the *whole* cup, so that same strength
+# also floods the already-lit outer wall and the mechanism, not just the
+# cut face it was meant for: measured 3.2-3.3x brighter (linear) on body
+# and 4.3-4.6x on mechanism than the same roles in flower-low.png, which
+# breaks the one-colour-per-role rule. 0.12 was chosen by sampling
+# alpha-masked body/mechanism patch means against flower-low.png and
+# lowering until every channel landed within 15% (see task-8-report.md
+# for the numbers), while the cut face itself (checked visually) still
+# reads as a lit surface rather than a black band.
+CUT_FILL_STRENGTH = 0.12
+
 
 def build_exploded(mould, cup):
     """The mould opened at its parting plane, the cast cup beside it.
@@ -515,7 +529,7 @@ def build(scene_def):
     center, radius = bbox_center(lo, hi), bbox_radius(lo, hi)
     add_shadow_catcher(lo, hi)
     if fill:
-        lighting(center, fill_dir=view, fill_radius=radius)
+        lighting(center, fill_dir=view, fill_radius=radius, fill_strength=CUT_FILL_STRENGTH)
     else:
         lighting(center)
     frame_camera(center, radius, view, margin=margin)

@@ -115,29 +115,38 @@ CONCEPT_GROUPS = {
 }
 
 CONCEPT_CAPTIONS = {
-    "flower-low": "Flower Low: five petals at the opening, pulled closed by strings that run up through the rim.",
+    "flower-low": "Flower Low: five petals at the opening, each joined by a silicone string to the "
+                  "pull mechanism in the stem; the strings are shown straight, as cast.",
     "flower-high": "Flower High: the same mechanism with the petal bases nearer the rim.",
     "twister": "Twister: top and bottom sections; the thin membrane skin that joins them is shown beside them.",
     "umbrella": "Umbrella: cup body, the umbrella insert, and its silicone housing, shown side by side.",
-    "drawstring": "Drawstring: cup body with the string channels; the folded lid is moulded flat and not shown.",
+    "drawstring": "Drawstring: cup body with the string channels; the folded lid is moulded flat and "
+                  "not shown; cut away to show the channels.",
     "duckbill": "Duckbill: moulded as two halves and joined; shown as the mirrored pair.",
     "balloon": "Balloon: cup body and bulb pipe; the balloon membrane exists only as its mould.",
     "extraction-valve": "Extraction valve: cup body and valve button, shown side by side. Untested concept.",
 }
 
+# Fix round 1: concept-drawstring's channels barely showed (mostly enclosed
+# by the body, only slivers visible from outside), so it is cut open like
+# flower-low-section instead of shown assembled.
+CONCEPT_LAYOUT_OVERRIDES = {"drawstring": "section"}
+
 SCENES = {}
 for slug, groups in CONCEPT_GROUPS.items():
     SCENES[f"concept-{slug}"] = Scene(
         name=f"concept-{slug}", groups=groups,
-        layout="assembled" if len(groups) == 1 else "flat-lay",
+        layout=CONCEPT_LAYOUT_OVERRIDES.get(
+            slug, "assembled" if len(groups) == 1 else "flat-lay"),
         caption=CONCEPT_CAPTIONS[slug])
 
 SCENES.update({
     "flower-low": Scene("flower-low", (FLOWER_LOW,), "assembled",
                         "Flower Low, the design flown on the parabolic flights.", resolution=2000),
     "flower-low-section": Scene("flower-low-section", (FLOWER_LOW,), "section",
-                                "Cut through Flower Low: wall thickness, the petals seated in the "
-                                "rim, and the base of the pull-strings above them.",
+                                "Cut through Flower Low: the cup wall, the petal insert seated "
+                                "inside the rim, and the bases of the strings (shown straight, "
+                                "as cast).",
                                 resolution=2000),
     "flower-low-vs-high": Scene("flower-low-vs-high", (FLOWER_LOW, FLOWER_HIGH), "flat-lay",
                                 "Flower Low (left) and Flower High (right).", resolution=2000,
