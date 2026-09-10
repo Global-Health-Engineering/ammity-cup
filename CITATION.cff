@@ -1,0 +1,48 @@
+cff-version: 1.2.0
+message: "If you use this hardware, please cite it as below."
+title: "SpaceCup (AMMITY): an open-source menstrual cup that seals before extraction, for menstruation in reduced gravity"
+abstract: >-
+  An open-source, cast-silicone menstrual cup for menstruation in reduced
+  gravity, designed on a shared base geometry across seven closing
+  mechanisms. Flower Low and Flower High scored highest in bench testing
+  (24/25), and Flower Low was flown during the Asclepios VI parabolic-flight
+  campaign. This is a research prototype, not a certified medical device.
+type: software
+version: 1.0.0
+date-released: 2026-09-10
+# A single value, not a list: Zenodo takes one licence per record.
+# The hardware in hardware/ is CERN-OHL-P v2, which is the more
+# restrictive of the two and the one that governs the design itself;
+# the documentation, data, site and tooling are CC BY 4.0, as set out
+# in the README and in LICENSE-CC-BY-4.0.md.
+license: CERN-OHL-P-2.0
+repository-code: "https://github.com/Global-Health-Engineering/ammity-cup"
+url: "https://global-health-engineering.github.io/ammity-cup/"
+keywords:
+  - open hardware
+  - menstrual cup
+  - microgravity
+  - parabolic flight
+  - space medicine
+  - silicone moulding
+  - 3D printing
+authors:
+  - family-names: Keller
+    given-names: Kim
+    affiliation: "ETH Zurich, Global Health Engineering"
+  - family-names: Dugué
+    given-names: Marion
+    affiliation: "ETH Zurich, Global Health Engineering"
+  - family-names: Tkaczuk
+    given-names: Jakub
+    orcid: "https://orcid.org/0000-0001-7997-9423"
+    affiliation: "ETH Zurich, Global Health Engineering"
+  - family-names: Tilley
+    given-names: Elizabeth
+    orcid: "https://orcid.org/0000-0002-2095-9724"
+    affiliation: "ETH Zurich, Global Health Engineering"
+contact:
+  - family-names: Tkaczuk
+    given-names: Jakub
+    orcid: "https://orcid.org/0000-0001-7997-9423"
+    affiliation: "ETH Zurich, Global Health Engineering"

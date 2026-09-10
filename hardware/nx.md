@@ -22,9 +22,6 @@ The shipped STEP files are a full B-rep and can be opened and edited in any STEP
 
 ## Regenerating the renders
 
-The renders under `site/public/renders/` are generated from the STEP files, not from NX:
-
-1. [`../tools/step_to_mesh.py`](../tools/step_to_mesh.py) converts each STEP file to a mesh.
-2. [`../tools/render_parts.py`](../tools/render_parts.py) renders the meshes to the images used on the site.
+The renders under `site/public/renders/` are generated from the STEP files, not from NX, by [`../tools/README.md`](../tools/README.md)'s `step_to_mesh.py` (converts each STEP file to a mesh) and `render_parts.py` (renders the meshes to the images used on the site).
 
 Each script documents its own run command and requirements in its module docstring.

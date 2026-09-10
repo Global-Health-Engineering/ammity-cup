@@ -1,0 +1,51 @@
+{
+  "title": "SpaceCup (AMMITY): an open-source menstrual cup that seals before extraction, for menstruation in reduced gravity",
+  "description": "<p>SpaceCup (AMMITY) is an open-source, cast-silicone menstrual cup designed for menstruation in reduced gravity. Seven closing mechanisms (Flower Low, Flower High, Twister, Umbrella, Duckbill, Drawstring and Balloon) were designed on a shared base cup geometry; Balloon could not be manufactured reliably and was excluded from testing.</p><p>Six mechanisms were scored in a functional bench test at 1 G, with Flower Low and Flower High scoring highest at 24 out of 25. Flower Low, the only fully functional prototype available at the time, was flown during the Asclepios VI parabolic-flight campaign; the flight results are qualitative, with no fluid volumes measured in flight. This is a research prototype, not a certified medical device.</p><p>This archive contains the editable and print-ready mould geometry (Siemens NX native files and STEP), the casting and use documentation, the tidied bench-test, cleaning and anonymised flight-questionnaire datasets with a codebook, and the scripts that regenerate every render. The hardware design in hardware/ is licensed CERN-OHL-P v2. The documentation, data, site and tooling are licensed CC BY 4.0.</p>",
+  "upload_type": "software",
+  "version": "1.0.0",
+  "language": "eng",
+  "access_right": "open",
+  "license": "cern-ohl-p-2.0",
+  "creators": [
+    {
+      "name": "Keller, Kim",
+      "affiliation": "ETH Zurich, Global Health Engineering"
+    },
+    {
+      "name": "Dugué, Marion",
+      "affiliation": "ETH Zurich, Global Health Engineering"
+    },
+    {
+      "name": "Tkaczuk, Jakub",
+      "affiliation": "ETH Zurich, Global Health Engineering",
+      "orcid": "0000-0001-7997-9423"
+    },
+    {
+      "name": "Tilley, Elizabeth",
+      "affiliation": "ETH Zurich, Global Health Engineering",
+      "orcid": "0000-0002-2095-9724"
+    }
+  ],
+  "keywords": [
+    "open hardware",
+    "menstrual cup",
+    "microgravity",
+    "parabolic flight",
+    "space medicine",
+    "silicone moulding",
+    "3D printing"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://global-health-engineering.github.io/ammity-cup/",
+      "relation": "isDocumentedBy",
+      "resource_type": "publication-other",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/Global-Health-Engineering/ammity-cup",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}
