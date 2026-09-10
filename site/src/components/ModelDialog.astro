@@ -1,0 +1,211 @@
+<!--
+  A native <dialog>, not a hand-rolled overlay: showModal() gives the
+  focus trap, the Esc-to-close binding, the inert background and the
+  ::backdrop for free, all of which a div would have to reimplement and
+  usually reimplements incorrectly.
+-->
+<dialog id="model-dialog" aria-label="Interactive 3D model">
+  <div class="model-head">
+    <p class="model-caption" id="model-caption"></p>
+    <div class="model-actions">
+      <button type="button" id="model-reset" class="model-btn">Reset view</button>
+      <button type="button" id="model-close" class="model-btn" aria-label="Close 3D model">Close</button>
+    </div>
+  </div>
+  <div class="model-stage" id="model-stage">
+    <p class="model-status" id="model-status">Loading model…</p>
+  </div>
+  <!-- Two wordings, one shown by media query: "scroll to zoom" is wrong
+       advice on a touch device, where the gesture is a pinch. -->
+  <p class="model-hint">
+    <span class="hint-pointer">Drag to rotate · scroll to zoom · right-drag or shift-drag to pan</span>
+    <span class="hint-touch">Drag to rotate · pinch to zoom · two-finger drag to pan</span>
+  </p>
+</dialog>
+
+<script>
+  // Progressive enhancement, in the strict sense: the posters are plain
+  // <img> inside a <button>, so with this script dead the section still
+  // shows every render, only the extra 3D affordance is missing. Hence
+  // the early returns rather than any fallback path.
+  const dialog = document.getElementById('model-dialog') as HTMLDialogElement | null;
+  const stage = document.getElementById('model-stage');
+  const status = document.getElementById('model-status');
+  const caption = document.getElementById('model-caption');
+  const openers = document.querySelectorAll<HTMLButtonElement>('.render-open');
+
+  if (dialog && stage && status && caption && openers.length && dialog.showModal) {
+    let viewer: any = null;
+    let opener: HTMLButtonElement | null = null;
+
+    async function open(button: HTMLButtonElement) {
+      opener = button;
+      caption!.innerHTML = button.dataset.caption ?? '';
+      status!.hidden = false;
+      status!.textContent = 'Loading model…';
+      dialog!.showModal();
+
+      try {
+        if (!viewer) {
+          // Dynamic import: three.js is fetched here, on the first open,
+          // and never as part of the page's initial payload.
+          const { createViewer } = await import('../scripts/model-viewer.js');
+          viewer = createViewer(stage!);
+        }
+        await viewer.load(button.dataset.model!);
+        viewer.start();
+        status!.hidden = true;
+      } catch (err) {
+        // A WebGL-less browser or a failed fetch must not leave a blank
+        // box with no explanation; the poster image is still visible
+        // behind the dialog, so say what happened and let them close it.
+        console.error(err);
+        status!.hidden = false;
+        status!.textContent =
+          'This browser could not display the 3D model. The rendered image shows the same view.';
+      }
+    }
+
+    function close() {
+      if (viewer) viewer.stop();
+      dialog!.close();
+    }
+
+    openers.forEach((button) => button.addEventListener('click', () => open(button)));
+    document.getElementById('model-close')?.addEventListener('click', close);
+    document.getElementById('model-reset')?.addEventListener('click', () => viewer?.reset());
+
+    // Covers Esc, which fires `close` on the dialog without going through
+    // the button above; the render loop has to stop either way.
+    dialog.addEventListener('close', () => {
+      viewer?.stop();
+      opener?.focus();
+    });
+
+    // Clicking the backdrop closes. The dialog's own box is the only
+    // element whose bounds we can test against here, because the backdrop
+    // is a pseudo-element and is not itself an event target.
+    //
+    // The press has to be checked as well as the release. A `click` fires
+    // wherever the pointer is *released*, so testing that alone closed
+    // the viewer whenever an orbit drag was released past the dialog
+    // edge, easy to do, since rotating means dragging a long way. Only a
+    // gesture that both starts and ends outside counts as a backdrop
+    // click.
+    let pressedOutside = false;
+    const isOutside = (event) => {
+      const box = dialog.getBoundingClientRect();
+      return (
+        event.clientX < box.left ||
+        event.clientX > box.right ||
+        event.clientY < box.top ||
+        event.clientY > box.bottom
+      );
+    };
+    dialog.addEventListener('pointerdown', (event) => {
+      pressedOutside = isOutside(event);
+    });
+    dialog.addEventListener('click', (event) => {
+      if (pressedOutside && isOutside(event)) close();
+      pressedOutside = false;
+    });
+
+    window.addEventListener('resize', () => {
+      if (dialog.open) viewer?.resize();
+    });
+  }
+</script>
+
+<style is:global>
+  #model-dialog {
+    width: min(92vw, 900px);
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--fg);
+  }
+  #model-dialog::backdrop {
+    background: rgba(16, 19, 23, .55);
+  }
+  .model-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .model-caption {
+    margin: 0;
+    font-size: 13.5px;
+    color: var(--fg-dim);
+  }
+  .model-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .model-btn {
+    border: 1px solid var(--line);
+    background: var(--bg-2);
+    color: var(--fg);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .model-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Height is viewport-relative and capped: the model needs real estate
+     to be worth orbiting, but the caption and controls must stay on
+     screen on a short laptop window. */
+  .model-stage {
+    position: relative;
+    height: min(62vh, 560px);
+    background: var(--bg-2);
+    /* Without this, an orbit drag across the canvas selects the status
+       paragraph underneath it and leaves it highlighted. */
+    user-select: none;
+  }
+  /* three.js writes explicit CSS pixel sizes onto the canvas; these rules
+     are the backstop that keeps it inside the stage no matter what it
+     writes, so a HiDPI display can never again lay the canvas out at
+     devicePixelRatio times the container and show only a corner of it. */
+  .model-stage canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+  }
+  .model-status {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0 24px;
+    text-align: center;
+    font-size: 13.5px;
+    color: var(--fg-dim);
+  }
+  /* `display: flex` above outranks the UA stylesheet's `[hidden] {
+     display: none }`, so setting .hidden in JS would leave this text
+     sitting on top of the loaded model. This rule is what actually
+     hides it. */
+  .model-status[hidden] { display: none; }
+  .model-hint {
+    margin: 0;
+    padding: 10px 16px;
+    font-size: 12.5px;
+    color: var(--fg-dim);
+    border-top: 1px solid var(--line);
+  }
+  .hint-touch { display: none; }
+  /* `hover: none` is the touch signal, not a width breakpoint: a narrow
+     desktop window still has a wheel, and a large tablet still pinches. */
+  @media (hover: none) {
+    .hint-pointer { display: none; }
+    .hint-touch { display: inline; }
+  }
+</style>

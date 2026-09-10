@@ -1,0 +1,33 @@
+---
+import site from '../data/site.json';
+const steps = [
+  'Fold the cup (a C-fold worked for the flight participants) and insert it.',
+  'To close, pull the strings at the stem steadily; pull only until the petals close, not so hard that the cup comes out.',
+  'Remove the closed cup by the stem.',
+  'Empty it with a syringe through the opening.',
+  'Reset the Flower mechanism by pushing the tail back until the petals reopen.',
+  'Clean: wipe off residue, then immerse and shake in 70 % isopropanol.',
+];
+---
+<section id="use">
+  <div class="eyebrow">Use</div>
+  <h2>Use and cleaning</h2>
+  <p class="lead">
+    This is the handling sequence used in the bench and flight tests. The
+    SpaceCup is a research prototype, not a certified medical device, and is
+    not intended for personal use.
+  </p>
+  <ol class="steps">{steps.map((s) => <li>{s}</li>)}</ol>
+  <p>
+    Of the three cleaning methods tested, 70 % isopropanol with shaking left
+    the fewest colonies. The narrow gaps between the Flower’s strings held
+    residue that steam reached poorly. Results are under
+    <a href="#validation">Validation</a>; the procedure is in
+    <a href={`${site.repo}/blob/main/docs/use.md`}>docs/use.md</a>.
+  </p>
+</section>
+<style>
+  .steps { padding-left: 22px; display: grid; gap: 8px; margin: 20px 0; }
+  .steps li { color: var(--fg-dim); }
+  .steps li::marker { color: var(--accent); font-weight: 600; font-family: var(--mono); }
+</style>

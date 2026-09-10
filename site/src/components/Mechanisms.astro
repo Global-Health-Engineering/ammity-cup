@@ -1,0 +1,50 @@
+---
+import { readCsv } from '../lib/csv.js';
+import site from '../data/site.json';
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+const scores = Object.fromEntries(readCsv('data/ground-test-scores.csv').map((r) => [r.variant, r]));
+const cards = [
+  { slug: 'flower-low', name: 'Flower Low', status: 'Flown', flown: true, note: 'Highest score; minor leakage only under extreme handling. The only design flown.' },
+  { slug: 'flower-high', name: 'Flower High', status: 'Bench-tested', note: 'Same score, largest volume held; slight friction on insertion.' },
+  { slug: 'duckbill', name: 'Duckbill', status: 'Bench-tested', note: 'Opens when squeezed; judged unlikely to stay sealed in microgravity, so not taken further.' },
+  { slug: 'twister', name: 'Twister', status: 'Bench-tested', note: 'Top and bottom pull apart on extraction and the membrane untwists.' },
+  { slug: 'drawstring', name: 'Drawstring', status: 'Bench-tested', note: 'The lid sits too high to close the opening.' },
+  { slug: 'umbrella', name: 'Umbrella', status: 'Bench-tested', note: 'Thin umbrella structures failed within the first few activations.' },
+  { slug: 'balloon', name: 'Balloon', status: 'Not reliably manufacturable', note: 'Thin membranes could not be cast reliably; not scored.' },
+  { slug: 'extraction-valve', name: 'Extraction valve', status: 'Untested concept', note: 'A cup with a valve button for emptying in place; designed, not tested.' },
+];
+---
+<section id="mechanisms">
+  <div class="eyebrow">Mechanisms</div>
+  <h2>Seven mechanisms, one flown</h2>
+  <p class="lead">
+    Every mechanism closes the same base cup. Six were cast and scored on the
+    bench out of {site.bench.score_max}; the scores and the scale are under
+    <a href="#validation">Validation</a>. Parts that come from separate CAD
+    files are shown side by side, not assembled.
+  </p>
+  <div class="render-grid mech-grid">
+    {cards.map((c) => (
+      <figure class="render">
+        <button type="button" class="render-open" data-model={`${base}/models/concept-${c.slug}.glb`} data-caption={c.name}>
+          <img src={`${base}/renders/concept-${c.slug}.png`} alt={`Render of the ${c.name} SpaceCup concept.`} loading="lazy" />
+          <span class="render-cue" aria-hidden="true">View in 3D</span>
+          <span class="visually-hidden">Open an interactive 3D model of the {c.name}</span>
+        </button>
+        <figcaption>
+          <strong>{c.name}</strong>{' '}
+          <span class:list={['status', { flown: c.flown }]}>{c.status}</span>
+          {scores[c.slug] && <span class="score">{scores[c.slug].overall}/{site.bench.score_max}</span>}
+          <br />{c.note}{' '}
+          <a href={`${site.repo}/tree/main/hardware/${c.slug}`}>Files</a>
+        </figcaption>
+      </figure>
+    ))}
+  </div>
+</section>
+<style>
+  .mech-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .score { font-family: var(--mono); font-weight: 600; color: var(--fg); margin-left: 6px; }
+  strong { color: var(--fg); }
+</style>

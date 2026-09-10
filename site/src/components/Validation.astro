@@ -1,0 +1,93 @@
+---
+import { readCsv } from '../lib/csv.js';
+import site from '../data/site.json';
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+const NAMES = { 'flower-low': 'Flower Low', 'flower-high': 'Flower High', drawstring: 'Drawstring',
+  twister: 'Twister', umbrella: 'Umbrella', duckbill: 'Duckbill', reference: 'Reference cup' };
+const CRIT = [['sealing', 'Sealing'], ['fluid_containment', 'Containment'],
+  ['structural_reliability', 'Reliability'], ['usability', 'Usability'], ['manufacturing', 'Manufacturing']];
+const scores = readCsv('data/ground-test-scores.csv').sort((a, b) => b.overall - a.overall);
+
+const counts = readCsv('data/cleaning-colony-counts.csv');
+const METHODS = [['ipa-70', '70 % IPA'], ['microwave', 'Microwave'], ['boiling', 'Boiling']];
+const CUPS = ['flower-low', 'flower-high', 'drawstring', 'twister', 'reference'];
+const cell = (m, c) => counts.find((r) => r.method === m && r.cup === c);
+// Colony-count bins for the shading (more colonies = darker).
+const bin = (n) => (n === 0 ? 1 : n <= 5 ? 2 : n <= 20 ? 3 : n <= 60 ? 4 : 5);
+
+const q = readCsv('data/flight-questionnaire.csv');
+const tally = (col) => {
+  const seen = q.map((r) => r[col]).filter((v) => v !== 'NA');
+  return `${[...new Set(seen)].map((v) => `${v} (${seen.filter((s) => s === v).length})`).join(', ')}${seen.length < q.length ? `; not observed (${q.length - seen.length})` : ''}`;
+};
+const flightRows = [
+  ['Overall experience', 'overall_experience'], ['Containment', 'containment'],
+  ['Activation', 'activation'], ['Insertion', 'insertion'], ['Extraction', 'extraction'],
+  ['Compared with a tampon', 'tampon_comparison'], ['Procedure felt safe', 'felt_safe'],
+];
+---
+<section id="validation">
+  <div class="eyebrow">Validation</div>
+  <h2>Validation</h2>
+  <p class="lead">
+    Six mechanisms were scored on the bench at 1 G, the Flower Low design was
+    flown on the {site.flight.campaign} parabolic flights, and four designs
+    went through a cleaning study. The flight results are qualitative: no
+    fluid volumes could be measured on board.
+  </p>
+
+  <h3>Bench scores</h3>
+  <p>Each criterion scored 1 (not met) to 5 (fully met); containment volume held at 1 G in brackets; target {site.bench.target_ml} mL, {site.bench.cycles} activation cycles.</p>
+  <div class="scroll-x"><table class="result-table">
+    <thead><tr><th>Mechanism</th>{CRIT.map(([, l]) => <th class="num">{l}</th>)}<th class="num">Overall</th></tr></thead>
+    <tbody>{scores.map((r) => (
+      <tr>
+        <td>{NAMES[r.variant]}</td>
+        {CRIT.map(([k]) => <td class={`num shade-${r[k]}`}>{r[k]}{k === 'fluid_containment' ? ` (${r.containment_ml} mL)` : ''}</td>)}
+        <td class="num">{r.overall}/{site.bench.score_max}</td>
+      </tr>))}
+    </tbody>
+  </table></div>
+  <div class="shade-key" aria-hidden="true">Score {[1, 2, 3, 4, 5].map((n) => <span class={`shade-${n}`}>{n}</span>)}</div>
+
+  <h3>Parabolic flight</h3>
+  <p>
+    Three analogue astronauts ran the Flower Low procedure in a glovebox over
+    ~{site.flight.reduced_gravity_s} s reduced-gravity windows, with tampons as
+    a comparison. Their post-flight answers (P1 to P3):
+  </p>
+  <div class="scroll-x"><table>
+    <thead><tr><th>Question</th><th>Answers (number of participants)</th></tr></thead>
+    <tbody>{flightRows.map(([label, col]) => <tr><td>{label}</td><td>{tally(col)}</td></tr>)}</tbody>
+  </table></div>
+  <figure class="render rig">
+    <button type="button" class="render-open" data-model={`${base}/models/rig-artificial-vagina.glb`} data-caption="Artificial vagina test model">
+      <img src={`${base}/renders/rig-artificial-vagina.png`} alt="Render of the artificial vagina test model, a silicone cylinder with an internal channel." loading="lazy" />
+      <span class="render-cue" aria-hidden="true">View in 3D</span>
+      <span class="visually-hidden">Open an interactive 3D model of the test model</span>
+    </button>
+    <figcaption>The self-made artificial vagina used for the 1 G tests (the flights used a store-bought model).</figcaption>
+  </figure>
+
+  <h3>Cleaning</h3>
+  <p>Colonies per plate after each method, from yoghurt contamination; "~" marks an estimate on a dense plate (±10–20 %).</p>
+  <div class="scroll-x"><table class="result-table">
+    <thead><tr><th>Method</th>{CUPS.map((c) => <th class="num">{NAMES[c]}</th>)}</tr></thead>
+    <tbody>{METHODS.map(([m, label]) => (
+      <tr><td>{label}</td>{CUPS.map((c) => {
+        const r = cell(m, c); const n = Number(r.colonies);
+        return <td class={`num shade-${bin(n)}`}>{r.approximate === 'true' ? '~' : ''}{n}</td>;
+      })}</tr>))}
+    </tbody>
+  </table></div>
+  <div class="shade-key" aria-hidden="true">Colonies <span class="shade-1">0</span><span class="shade-2">1–5</span><span class="shade-3">6–20</span><span class="shade-4">21–60</span><span class="shade-5">&gt;60</span></div>
+  <p class="table-note">
+    Data and codebook: <a href={`${site.repo}/tree/main/data`}>data/</a>. Method details:
+    <a href={`${site.repo}/blob/main/docs/validation.md`}>docs/validation.md</a>.
+  </p>
+</section>
+<style>
+  #validation h3 { margin: 32px 0 10px; }
+  .rig { max-width: 360px; margin: 20px 0 0; }
+</style>

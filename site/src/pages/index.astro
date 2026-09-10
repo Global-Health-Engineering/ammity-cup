@@ -3,12 +3,24 @@ import Base from '../layouts/Base.astro';
 import site from '../data/site.json';
 import Hero from '../components/Hero.astro';
 import Why from '../components/Why.astro';
+import Device from '../components/Device.astro';
+import Mechanisms from '../components/Mechanisms.astro';
+import Make from '../components/Make.astro';
+import Use from '../components/Use.astro';
+import Validation from '../components/Validation.astro';
+import Limits from '../components/Limits.astro';
+import ModelDialog from '../components/ModelDialog.astro';
 import Footer from '../components/Footer.astro';
-// Task 13 inserts, in order after Why: Device, Mechanisms, Make, Use,
-// Validation, Limits, then ModelDialog before Footer.
 ---
 <Base title={`${site.name}, an open-source menstrual cup for reduced gravity`} description={site.tagline}>
   <Hero />
   <Why />
+  <Device />
+  <Mechanisms />
+  <Make />
+  <Use />
+  <Validation />
+  <Limits />
+  <ModelDialog />
   <Footer />
 </Base>

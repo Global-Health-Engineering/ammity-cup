@@ -1,0 +1,51 @@
+---
+import site from '../data/site.json';
+const m = site.moulding;
+const settings = [
+  { label: 'Mould material', value: `${m.mould_material_hot_cure} for the 100 °C cure; PLA, PETG or ABS for room-temperature silicones` },
+  { label: 'Layer height', value: `${m.layer_height_mm} mm` },
+  { label: 'Walls', value: `${m.wall_lines} lines` },
+  { label: 'Infill', value: `${m.infill_pct} %` },
+  { label: 'Vents', value: `2–3, about ${m.vent_mm} mm` },
+  { label: 'Alignment keys', value: `${m.key_mm} mm hemispherical` },
+];
+const steps = [
+  'Print both mould halves (and any cores) from the variant’s mould-stl/ folder.',
+  'Mix the two silicone parts at the ratio on the data sheet (do not assume 1:1) and degas under vacuum.',
+  'Clamp the mould, inject the silicone through the sprue at the stem with a syringe, and close the vents with tape or wax once silicone appears.',
+  'Cure as the data sheet specifies (see the table below), then open the mould and demould slowly to avoid tearing thin features.',
+  'For sections of a different hardness, cut them out of the cured cup, refill with the other silicone and cure again.',
+];
+---
+<section id="make">
+  <div class="eyebrow">Make</div>
+  <h2>Printing the moulds and casting</h2>
+  <p class="lead">
+    Nothing about the cup is printed directly: the printer makes the moulds,
+    and the cup is cast in silicone. The mould files for every variant are in
+    the repository.
+  </p>
+  <div class="scroll-x"><table>
+    <thead><tr><th>Mould print setting</th><th>Value</th></tr></thead>
+    <tbody>{settings.map((s) => <tr><td>{s.label}</td><td>{s.value}</td></tr>)}</tbody>
+  </table></div>
+  <h3>Casting</h3>
+  <ol class="steps">{steps.map((s) => <li>{s}</li>)}</ol>
+  <h3>Silicones used</h3>
+  <div class="scroll-x"><table>
+    <thead><tr><th>Silicone</th><th>Maker</th><th>Used for</th><th>Cure</th></tr></thead>
+    <tbody>{site.silicones.map((s) => <tr><td>{s.name}</td><td>{s.maker}</td><td>{s.use}</td><td>{s.cure ?? ''}</td></tr>)}</tbody>
+  </table></div>
+  <p class="table-note">
+    Medical-grade silicone does not make the prototype a certified medical
+    device. Full procedure, known defects and fixes:
+    <a href={`${site.repo}/blob/main/docs/manufacturing.md`}>docs/manufacturing.md</a>
+    and the author’s <a href={`${site.repo}/blob/main/docs/moulding-guide.pdf`}>moulding guide (PDF)</a>.
+  </p>
+</section>
+<style>
+  #make h3 { margin: 28px 0 10px; }
+  .steps { padding-left: 22px; display: grid; gap: 8px; }
+  .steps li { color: var(--fg-dim); }
+  .steps li::marker { color: var(--accent); font-weight: 600; font-family: var(--mono); }
+</style>

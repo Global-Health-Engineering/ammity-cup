@@ -1,0 +1,53 @@
+---
+import site from '../data/site.json';
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
+const files = [
+  { part: 'Cup, Flower Low (6 solids: body halves, rim pieces, petals and strings)', file: 'flower-low/step/flower-cup-withrim-part.step' },
+  { part: 'Mould, 6 pieces', file: 'flower-low/step/flower-cup-withrim-mould.step' },
+  { part: 'Mould, print-ready', file: 'flower-low/mould-stl/ (8 STL)' },
+  { part: 'Native CAD', file: 'flower-low/nx/ (Siemens NX .prt)' },
+];
+const renders = [
+  { name: 'flower-low', alt: 'Flower Low SpaceCup, three-quarter view: grey silicone body, magenta petals at the opening; the pull strings are shown straight, as cast.', caption: 'Flower Low: petals (magenta) close the opening when the strings are pulled.' },
+  { name: 'flower-low-section', alt: 'Section through the Flower Low cup showing the cup wall, the petal insert seated inside the rim, and the bases of the pull strings.', caption: 'Cut through the cup: the wall, the petal insert inside the rim, and the bases of the strings (shown straight, as cast).' },
+  { name: 'flower-low-vs-high', alt: 'Flower Low and Flower High side by side; the High version is taller, with petal bases nearer the rim.', caption: 'Flower Low (left, flown) and Flower High (right).' },
+  { name: 'flower-low-mould', alt: 'The printed mould pieces for Flower Low, separated at the parting plane, with the cast cup beside them.', caption: 'The printed mould opened at its parting plane, with the cast cup.' },
+];
+---
+<section id="device">
+  <div class="eyebrow">Device</div>
+  <h2>Device</h2>
+  <p class="lead">
+    The flown design, Flower Low, is a silicone cup with five flexible,
+    petal-like elements around its opening. Each petal is joined by a silicone
+    string to a pull mechanism in the stem; pulling it draws the petals
+    together and closes the cup before it is removed. The renders show the
+    strings straight, as cast. The cup follows the base-cup
+    envelope: {site.base_cup.wall_mm} mm wall, {site.base_cup.rim_od_mm} mm rim,
+    {site.base_cup.length_mm} mm long without the stem.
+  </p>
+  <div class="render-grid">
+    {renders.map((r) => (
+      <figure class="render">
+        <button type="button" class="render-open" data-model={`${base}/models/${r.name}.glb`} data-caption={r.caption}>
+          <img src={`${base}/renders/${r.name}.png`} alt={r.alt} loading="lazy" />
+          <span class="render-cue" aria-hidden="true">View in 3D</span>
+          <span class="visually-hidden">Open an interactive 3D model of this view</span>
+        </button>
+        <figcaption>{r.caption}</figcaption>
+      </figure>
+    ))}
+  </div>
+  <div class="scroll-x">
+    <table>
+      <thead><tr><th>Part</th><th>File (under <code>hardware/</code>)</th></tr></thead>
+      <tbody>{files.map((f) => <tr><td>{f.part}</td><td><code>{f.file}</code></td></tr>)}</tbody>
+    </table>
+  </div>
+  <p class="table-note">
+    The source CAD is Siemens NX; every part also ships as STEP for any
+    other CAD package. See <a href={`${site.repo}/blob/main/hardware/nx.md`}>hardware/nx.md</a>
+    and <a href={`${site.repo}/blob/main/hardware/README.md`}>hardware/README.md</a>.
+  </p>
+</section>

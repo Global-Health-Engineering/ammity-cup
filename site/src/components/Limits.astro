@@ -1,0 +1,58 @@
+---
+import site from '../data/site.json';
+
+const limits = [
+  { title: 'Research prototype', detail: 'The SpaceCup is not a certified medical device and has not been tested on people. Cleaning was assessed under non-sterile conditions, mostly on general-purpose silicone.' },
+  { title: 'Short reduced-gravity windows', detail: `Each parabola gives about ${site.flight.reduced_gravity_s} s of reduced gravity, far from wearing a cup for hours in continuous microgravity.` },
+  { title: 'No measured volumes in flight', detail: 'There was no way to measure fluid on board; containment in flight is reported only as the participants observed it, and the small fluid volume made tampon and cup hard to tell apart.' },
+  { title: 'Simplified anatomy', detail: 'The flights used an opaque, simplified store-bought model, which limited what could be seen of the fluid, the walls and the cup.' },
+  { title: 'Residue on the mechanism', detail: 'Fluid collected on the Flower’s strings, and the narrow gaps between them were the hardest areas to clean.' },
+];
+---
+<section id="limits">
+  <div class="eyebrow">Limitations</div>
+  <h2>Limitations</h2>
+  <p class="lead">
+    The tests show that the Flower mechanism can be inserted, closed and
+    removed during short periods of reduced gravity. They do not yet
+    establish how well it contains fluid over long-duration use.
+  </p>
+
+  <ul class="limits-list">
+    {limits.map((l) => (
+      <li>
+        <strong>{l.title}</strong>
+        <span>{l.detail}</span>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .limits-list {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0 0;
+    display: grid;
+    gap: 14px;
+  }
+  .limits-list li {
+    padding: 20px 22px;
+    background: var(--bg-2);
+    border-left: 3px solid var(--ghe-red);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .limits-list strong {
+    display: block;
+    color: var(--fg);
+    font-weight: 600;
+    font-size: 15.5px;
+    margin-bottom: 6px;
+  }
+  .limits-list span {
+    display: block;
+    color: var(--fg-dim);
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+</style>
