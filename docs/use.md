@@ -4,7 +4,7 @@ How the SpaceCup prototypes were used during bench and flight testing. This desc
 
 ## Insertion
 
-Insertion followed the standard technique used for commercial menstrual cups: the rim is folded into a C-shape (a "C-fold"), narrowing the cup for insertion, then it is released once past the vaginal opening so it can spring back open. This general technique, not a SpaceCup-specific one, is what the bench-test and flight participants used to insert the prototypes.
+Fold the cup, for example into a C shape, to narrow it for insertion, then release it once past the vaginal opening so it can spring back open. This is the standard technique used for commercial menstrual cups generally, not a SpaceCup-specific one.
 
 ## Activation
 

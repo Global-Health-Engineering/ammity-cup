@@ -47,7 +47,7 @@ The moulds print in ASA when the silicone needs a heated, 100 °C cure (medical-
 Every STL and STEP file here is in millimetres, checked in CI:
 
 ```bash
-python3 tools/verify_units.py "hardware/**/*.stl"
+python3 tools/verify_units.py "hardware/*/mould-stl/*.stl"
 ```
 
 STEP files declare `SI_UNIT(.MILLI.,.METRE.)` and need no conversion.
