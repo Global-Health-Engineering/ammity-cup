@@ -6,7 +6,7 @@
   "repo": "https://github.com/Global-Health-Engineering/ammity-cup",
   "version": "1.0.0",
   "flight": {
-    "campaign": "Asclepios",
+    "campaign": "Asclepios VI",
     "reduced_gravity_s": 6,
     "design_flown": "Flower Low"
   },
