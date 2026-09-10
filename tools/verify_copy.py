@@ -28,9 +28,9 @@ BANNED_PHRASES = [
 ]
 
 # The one sanctioned use of "certified medical device" is its negation,
-# the disclaimer the spec requires. A hit on that phrase is ignored when
-# the same line negates it ("not a", "does not make").
-_NEGATED = re.compile(r"\b(not|no|never|does not make)\b[^.]*certified medical device")
+# the disclaimer the spec requires. A hit on that phrase is ignored only for
+# the exact patterns: "not a certified medical device" or "does not make <1-4 words> a certified medical device".
+_NEGATED = re.compile(r"(?:\bnot an?|\bdoes not make(?:\s+[\w-]+){1,4}\s+an?)\s+certified medical device")
 
 # Scanned when no paths are given on the command line: every markdown page
 # plus the Astro site *source* (components, layouts, and the copy-holding

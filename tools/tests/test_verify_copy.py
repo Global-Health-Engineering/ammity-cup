@@ -15,6 +15,7 @@ def write(p, text):
     "space-qualified hardware",
     "Certified by OSHWA.",
     "It is a certified medical device.",
+    "It is not hard to use and is a certified medical device.",
 ])
 def test_unsupported_claims_are_caught(tmp_path, text):
     assert scan_file(write(tmp_path / "p.md", text + "\n"))
@@ -24,6 +25,7 @@ def test_unsupported_claims_are_caught(tmp_path, text):
     "Medical-grade silicone does not make the prototype a certified medical device.",
     "Only minor leakage was reported.",
     "Tested on a parabolic flight.",
+    "Medical-grade silicone does not make the resulting prototype a certified medical device.",
 ])
 def test_the_required_disclaimers_pass(tmp_path, text):
     assert scan_file(write(tmp_path / "p.md", text + "\n")) == []
