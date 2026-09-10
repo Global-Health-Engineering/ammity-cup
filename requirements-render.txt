@@ -1,0 +1,3 @@
+# Local render pipeline only (tools/step_to_mesh.py). Not installed in CI.
+cadquery-ocp==8.0.1.0.0
+numpy==2.4.4

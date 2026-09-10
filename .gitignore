@@ -1,0 +1,23 @@
+.DS_Store
+__pycache__/
+*.pyc
+.pytest_cache/
+node_modules/
+site/dist/
+site/.astro/
+.venv/
+*.blend1
+
+# intermediate meshes tessellated from STEP by tools/step_to_mesh.py,
+# inputs to the Blender renders, never published
+build/
+
+# staging for supplied assets, never published
+incoming/
+
+# local Quarto/pandoc previews of the markdown files
+README.html
+README_files/
+
+# SDD planning content for this release project, process, not product
+.superpowers/
