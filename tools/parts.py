@@ -58,7 +58,13 @@ class Scene:
     groups: tuple
     layout: str
     caption: str
-    resolution: int = 1000
+    # 800, not 1000: Task 8's first render pass put renders+models at 25.2
+    # MB against a 20 MB budget; dropping every scene that relies on this
+    # default (the 8 concept-* scenes and rig-artificial-vagina) to 800px
+    # is the controller-authorized first lever (see Task 8 brief). The
+    # four flower-low hero scenes set resolution=2000 explicitly below and
+    # are unaffected.
+    resolution: int = 800
     uniform_role: str = None
 
 
@@ -109,7 +115,7 @@ CONCEPT_GROUPS = {
 }
 
 CONCEPT_CAPTIONS = {
-    "flower-low": "Flower Low: five petals at the opening, pulled closed by strings through the stem.",
+    "flower-low": "Flower Low: five petals at the opening, pulled closed by strings that run up through the rim.",
     "flower-high": "Flower High: the same mechanism with the petal bases nearer the rim.",
     "twister": "Twister: top and bottom sections; the thin membrane skin that joins them is shown beside them.",
     "umbrella": "Umbrella: cup body, the umbrella insert, and its silicone housing, shown side by side.",
@@ -130,7 +136,8 @@ SCENES.update({
     "flower-low": Scene("flower-low", (FLOWER_LOW,), "assembled",
                         "Flower Low, the design flown on the parabolic flights.", resolution=2000),
     "flower-low-section": Scene("flower-low-section", (FLOWER_LOW,), "section",
-                                "Cut through Flower Low: petals and the string channels in the stem.",
+                                "Cut through Flower Low: wall thickness, the petals seated in the "
+                                "rim, and the base of the pull-strings above them.",
                                 resolution=2000),
     "flower-low-vs-high": Scene("flower-low-vs-high", (FLOWER_LOW, FLOWER_HIGH), "flat-lay",
                                 "Flower Low (left) and Flower High (right).", resolution=2000,
