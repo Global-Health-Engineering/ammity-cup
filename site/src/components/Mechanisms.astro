@@ -22,9 +22,11 @@ const cards = [
     Every mechanism closes the same base cup. Six were cast and scored on the
     bench out of {site.bench.score_max}; the scores and the scale are under
     <a href="#validation">Validation</a>. Parts that come from separate CAD
-    files are shown side by side, not assembled.
+    files are shown side by side, not assembled. The eighth card, the
+    extraction valve, is a later concept: designed, but not tested and not
+    part of the thesis.
   </p>
-  <div class="render-grid mech-grid">
+  <div class="render-grid">
     {cards.map((c) => (
       <figure class="render">
         <button type="button" class="render-open" data-model={`${base}/models/concept-${c.slug}.glb`} data-caption={c.name}>
@@ -44,7 +46,6 @@ const cards = [
   </div>
 </section>
 <style>
-  .mech-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .score { font-family: var(--mono); font-weight: 600; color: var(--fg); margin-left: 6px; }
   strong { color: var(--fg); }
 </style>
