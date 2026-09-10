@@ -4,7 +4,7 @@ How the SpaceCup prototypes were used during bench and flight testing. This desc
 
 ## Insertion
 
-Fold the cup, for example into a C shape, to narrow it for insertion, then release it once past the vaginal opening so it can spring back open. This is the standard technique used for commercial menstrual cups generally, not a SpaceCup-specific one.
+Fold the cup, for example into a C shape, to narrow it for insertion, then release it once past the vaginal opening so it can spring back open.
 
 ## Activation
 
@@ -12,11 +12,11 @@ For the Flower mechanisms, activation means pulling the strings that run from th
 
 ## Extraction
 
-Extraction follows activation: once the mechanism is closed and the fluid sealed in, the cup is drawn out by the stem. Analogue-astronaut testers reported that both insertion and extraction were generally easy to perform, in bench testing (thesis pp.20-21) and in reduced gravity (thesis p.22; see [`validation.md`](validation.md)).
+Extraction follows activation: once the mechanism is closed and the fluid sealed in, the cup is drawn out by the stem. The bench evaluation, run under lab conditions, scored insertion, extraction and resetting together as usability, highest for Flower Low (thesis pp.20-21); in reduced gravity, analogue-astronaut testers reported that both insertion and extraction were generally easy to perform (thesis p.22; see [`validation.md`](validation.md)).
 
 ## Resetting the Flower
 
-To reuse a Flower cup, the tail (the pull mechanism in the stem) has to be pushed back to its open, unactivated position after each activation. Bench and flight testers reported this reset as requiring some force (`data/flight-questionnaire.csv`).
+To reuse a Flower cup, the tail (the pull mechanism in the stem) has to be pushed back to its open, unactivated position after each activation. One flight participant reported this reset as requiring some force (`data/flight-questionnaire.csv`).
 
 ## Emptying by syringe
 
