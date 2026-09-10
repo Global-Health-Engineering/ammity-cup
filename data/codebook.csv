@@ -1,0 +1,28 @@
+file_name,variable_name,variable_type,variable_values,description,unit
+ground-test-scores.csv,variant,categorical,"flower-low, flower-high, drawstring, twister, umbrella, duckbill","Prototype mechanism evaluated in the functional bench test (thesis Table 2, p.20); the balloon concept is absent because it could not be manufactured reliably",NA
+ground-test-scores.csv,sealing,ordinal,1-5,"Sealing-performance score (thesis Table 1, p.16): 1 = immediate, uncontrolled leakage; 5 = no leakage observed under any conditions",NA
+ground-test-scores.csv,fluid_containment,ordinal,1-5,"Fluid-containment score (thesis Table 1, p.16): 1 = well below the 12 mL target volume; 5 = meets or exceeds the target volume",NA
+ground-test-scores.csv,containment_ml,"numeric, continuous",14-30,Volume held at 1 G in the containment test,mL
+ground-test-scores.csv,structural_reliability,ordinal,1-5,"Structural-reliability score (thesis Table 1, p.16): 1 = mechanism failed or cracked within the first few activations; 5 = no cracks, deformation, or failure after 30 cycles",NA
+ground-test-scores.csv,usability,ordinal,1-5,"Usability score (thesis Table 1, p.16): 1 = insertion, extraction, or reset could not be completed; 5 = full cycle completed easily and intuitively",NA
+ground-test-scores.csv,manufacturing,ordinal,1-5,"Manufacturability score (thesis Table 1, p.16): 1 = could not be fabricated with available methods or materials; 5 = fabricated reliably and consistently with no notable issues",NA
+ground-test-scores.csv,overall,ordinal,16-24 (25 max possible),Sum of the five criterion scores,NA
+cleaning-colony-counts.csv,method,categorical,"ipa-70, microwave, boiling","Cleaning procedure applied before plating: ipa-70 = wipe, then immersion and shaking in 70 % isopropanol; microwave = wipe, then 30 s upside down in 20 mL water in a microwave; boiling = 5 min boiling, wiped but not rinsed beforehand",NA
+cleaning-colony-counts.csv,cup,categorical,"flower-low, flower-high, drawstring, twister, reference","SpaceCup design cleaned, or reference, a commercial Claricup(TM) menstrual cup",NA
+cleaning-colony-counts.csv,colonies,"numeric, continuous",0-130,"Colonies counted per agar plate after the cleaning and culture step. Contamination came from live-culture yoghurt; counts on dense plates carry an estimated ±10-20 % uncertainty (thesis p.23)",colonies per plate
+cleaning-colony-counts.csv,approximate,categorical,"true, false",Whether the thesis marked this colony count with ""~"" (estimated because of high plate density),NA
+flight-questionnaire.csv,participant,categorical,"P1, P2, P3",Pseudonymous identifier for the parabolic-flight test participant,NA
+flight-questionnaire.csv,flight_date,date,"2026-05-18, 2026-05-28",ISO date of the parabolic flight on which the participant performed the SpaceCup procedure,NA
+flight-questionnaire.csv,parabolas,"numeric, discrete","1, 2, 6",Number of parabolas during which the participant performed the SpaceCup procedure,NA
+flight-questionnaire.csv,overall_experience,ordinal,"very easy, easy, neutral, difficult, very difficult, NA","Q1: ""How would you rate your overall experience performing the experiment?""",NA
+flight-questionnaire.csv,fluid_behaviour,categorical,"very stable (remained in place), mostly stable, moderate movement, unstable / difficult to control, highly unstable, NA","Q2: ""How would you describe the behaviour of the synthetic fluid in microgravity?""",NA
+flight-questionnaire.csv,fluid_as_expected,categorical,"yes, no, NA","Q2 follow-up: ""Did the fluid behave as you expected?""",NA
+flight-questionnaire.csv,containment,ordinal,"very well, minor leakage, moderate leakage, significant leakage, NA","Q3.1: ""How well did the SpaceCup capture and retain the fluid?""",NA
+flight-questionnaire.csv,activation,ordinal,"very easy, easy, moderate, difficult, very difficult, NA","Q3.2: ""How difficult was it to activate the sealing mechanism?""",NA
+flight-questionnaire.csv,insertion,ordinal,"very easy, easy, moderate, difficult, very difficult, NA","Q3.3: ""How easy was the insertion of the SpaceCup?""",NA
+flight-questionnaire.csv,extraction,ordinal,"very easy, easy, moderate, difficult, very difficult, NA","Q3.4: ""How easy was the extraction of the SpaceCup?""",NA
+flight-questionnaire.csv,tampon_comparison,categorical,"much better, better, similar, worse, much worse, NA","Q4: ""How would you compare the tampon performance to the SpaceCup?""",NA
+flight-questionnaire.csv,task_difficulty,ordinal,"very easy, easy, moderate, difficult, very difficult, NA","Q5: ""How difficult was it to perform the tasks during microgravity?""",NA
+flight-questionnaire.csv,difficulties,text,"';'-joined subset of: loss of control of objects, difficulty stabilizing hands, difficulty handling fluid, time pressure, other (paraphrased); or NA","Q5 follow-up checkboxes (""Did you experience any of the following?""), ticked options joined by ';'; an ""Other:"" entry is paraphrased; NA if none were ticked",NA
+flight-questionnaire.csv,felt_safe,categorical,"yes, no, NA","Q6: ""Did you feel that the procedure was safe and well controlled?""",NA
+flight-questionnaire.csv,notes,text,free text,"Anonymised paraphrase of free-text comments from across the questionnaire (never a verbatim quote, never a name); the original forms are not published",NA

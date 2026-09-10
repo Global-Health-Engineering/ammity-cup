@@ -1,0 +1,7 @@
+variant,sealing,fluid_containment,containment_ml,structural_reliability,usability,manufacturing,overall
+flower-low,4,5,18,5,5,5,24
+flower-high,5,5,30,5,4,5,24
+drawstring,1,5,27,5,4,3,18
+twister,5,5,15,5,2,4,21
+umbrella,4,5,22,1,3,3,16
+duckbill,3,5,14,5,5,4,22

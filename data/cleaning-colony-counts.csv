@@ -1,0 +1,16 @@
+method,cup,colonies,approximate
+ipa-70,flower-low,5,false
+ipa-70,flower-high,12,false
+ipa-70,drawstring,1,false
+ipa-70,twister,1,false
+ipa-70,reference,0,false
+microwave,flower-low,54,true
+microwave,flower-high,33,true
+microwave,drawstring,0,false
+microwave,twister,1,false
+microwave,reference,1,false
+boiling,flower-low,9,false
+boiling,flower-high,10,false
+boiling,drawstring,15,false
+boiling,twister,130,true
+boiling,reference,53,true
