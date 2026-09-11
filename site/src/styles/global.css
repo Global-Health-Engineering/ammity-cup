@@ -109,26 +109,29 @@ code {
   overflow-wrap: break-word;
 }
 
-.render-grid {
+/* .photo-grid and .photo are the plain-photo counterparts of .render-grid
+   and .render (a photo has no click-to-open button), sharing the same
+   card look so photos and renders read as one system on the page. */
+.render-grid, .photo-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px;
   margin-top: 32px;
 }
-.render {
+.render, .photo {
   margin: 0;
   background: var(--bg-2);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 14px;
 }
-.render img {
+.render img, .photo img {
   display: block;
   width: 100%;
   height: auto;
   border-radius: 4px;
 }
-.render figcaption {
+.render figcaption, .photo figcaption {
   margin-top: 10px;
   font-size: 13px;
   color: var(--fg-dim);
@@ -181,7 +184,7 @@ code {
 }
 
 @media (max-width: 700px) {
-  .render-grid { grid-template-columns: 1fr; }
+  .render-grid, .photo-grid { grid-template-columns: 1fr; }
 }
 
 /* Sequential shading for result tables: one hue (GHE blue) mixed into

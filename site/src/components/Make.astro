@@ -1,5 +1,7 @@
 ---
 import site from '../data/site.json';
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
 const m = site.moulding;
 const settings = [
   { label: 'Mould material', value: `${m.mould_material_hot_cure} for the 100 °C cure; PLA, PETG or ABS for room-temperature silicones` },
@@ -16,6 +18,13 @@ const steps = [
   'Cure as the data sheet specifies (see the table below), then open the mould and demould slowly to avoid tearing thin features.',
   'For sections of a different hardness, cut them out of the cured cup, refill with the other silicone and cure again.',
 ];
+const photos = [
+  { file: 'mould-clamped', w: 900, h: 900, alt: 'A printed mould, held shut with bar clamps, ready for casting.', caption: 'A printed mould clamped shut for casting.' },
+  { file: 'degassing', w: 1001, h: 1000, alt: 'A glass vacuum desiccator on a bench, with a container of mixed silicone inside it and a vacuum pump behind.', caption: 'Degassing the mixed silicone in a vacuum desiccator.' },
+  { file: 'degassing-closeup', w: 1500, h: 1500, alt: 'Close-up of orange-tinted silicone foaming with air bubbles as it is degassed under vacuum.', caption: 'Mixed silicone foaming as trapped air is drawn out under vacuum.' },
+  { file: 'duckbill-half-in-mould', w: 905, h: 905, alt: 'One half of the Duckbill cup, cast in purple silicone, still sitting in its open printed mould half.', caption: 'One Duckbill half in its open mould; the two halves are cast separately and joined.' },
+  { file: 'drawstring-lid-mould', w: 748, h: 839, alt: 'Two flat printed mould halves for the Drawstring lid side by side; the right one holds a cast purple string in its channel.', caption: 'The Drawstring lid mould halves, one holding the cast string.' },
+];
 ---
 <section id="make">
   <div class="eyebrow">Make</div>
@@ -31,6 +40,15 @@ const steps = [
   </table></div>
   <h3>Casting</h3>
   <ol class="steps">{steps.map((s) => <li>{s}</li>)}</ol>
+  <h3>Casting in practice</h3>
+  <div class="photo-grid">
+    {photos.map((p) => (
+      <figure class="photo">
+        <img src={`${base}/photos/${p.file}.webp`} alt={p.alt} width={p.w} height={p.h} loading="lazy" />
+        <figcaption>{p.caption}</figcaption>
+      </figure>
+    ))}
+  </div>
   <h3>Silicones used</h3>
   <div class="scroll-x"><table>
     <thead><tr><th>Silicone</th><th>Maker</th><th>Used for</th><th>Cure</th></tr></thead>

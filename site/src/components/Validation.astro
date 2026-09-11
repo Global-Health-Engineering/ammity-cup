@@ -57,18 +57,36 @@ const flightRows = [
     ~{site.flight.reduced_gravity_s} s reduced-gravity windows, with tampons as
     a comparison. Their post-flight answers (P1 to P3):
   </p>
+  <figure class="photo glovebox-photo">
+    <img
+      src={`${base}/photos/glovebox.webp`}
+      alt="Inside the flight glovebox: two artificial vaginas labelled AV1 and AV2, numbered syringes, tampons and SpaceCups in labelled bags, and a camera, seen from above with a gloved hand reaching in."
+      width="1600" height="1200" loading="lazy"
+    />
+    <figcaption>The flight glovebox: two store-bought artificial vaginas (AV1, AV2), numbered syringes, tampons and SpaceCups in labelled bags, and a camera.</figcaption>
+  </figure>
   <div class="scroll-x"><table>
     <thead><tr><th>Question</th><th>Answers (number of participants)</th></tr></thead>
     <tbody>{flightRows.map(([label, col]) => <tr><td>{label}</td><td>{tally(col)}</td></tr>)}</tbody>
   </table></div>
-  <figure class="render rig">
-    <button type="button" class="render-open" data-model={`${base}/models/rig-artificial-vagina.glb`} data-caption="Artificial vagina test model">
-      <img src={`${base}/renders/rig-artificial-vagina.png`} alt="Render of the artificial vagina test model, a silicone cylinder with an internal channel." loading="lazy" />
-      <span class="render-cue" aria-hidden="true">View in 3D</span>
-      <span class="visually-hidden">Open an interactive 3D model of the test model</span>
-    </button>
-    <figcaption>The self-made artificial vagina used for the 1 G tests (the flights used a store-bought model).</figcaption>
-  </figure>
+  <div class="render-grid">
+    <figure class="render">
+      <button type="button" class="render-open" data-model={`${base}/models/rig-artificial-vagina.glb`} data-caption="Artificial vagina test model">
+        <img src={`${base}/renders/rig-artificial-vagina.png`} alt="Render of the artificial vagina test model, a silicone cylinder with an internal channel." loading="lazy" />
+        <span class="render-cue" aria-hidden="true">View in 3D</span>
+        <span class="visually-hidden">Open an interactive 3D model of the test model</span>
+      </button>
+      <figcaption>The self-made artificial vagina used for the 1 G tests (the flights used a store-bought model).</figcaption>
+    </figure>
+    <figure class="photo">
+      <img
+        src={`${base}/photos/artificial-vagina-demoulding.webp`}
+        alt="The self-made artificial vagina during demoulding: the cast silicone model on its printed core, with the two outer mould halves opened."
+        width="1430" height="1430" loading="lazy"
+      />
+      <figcaption>The self-made artificial vagina during demoulding: the cast silicone model on its printed core, with the two outer mould halves opened.</figcaption>
+    </figure>
+  </div>
 
   <h3>Cleaning</h3>
   <p>Colonies per plate after each method, from yoghurt contamination; "~" marks an estimate on a dense plate (±10–20 %).</p>
@@ -89,5 +107,5 @@ const flightRows = [
 </section>
 <style>
   #validation h3 { margin: 32px 0 10px; }
-  .rig { max-width: 360px; margin: 20px 0 0; }
+  .glovebox-photo { margin: 20px 0 0; }
 </style>

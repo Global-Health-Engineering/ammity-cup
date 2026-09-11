@@ -40,3 +40,11 @@ def test_scores_rendered_from_data():
 def test_no_analytics_no_oshwa():
     h = html().lower()
     assert "plausible" not in h and "oshwa" not in h
+
+def test_every_photo_is_referenced():
+    photos_dir = os.path.join(ROOT, "site", "public", "photos")
+    photos = sorted(f for f in os.listdir(photos_dir) if f.endswith(".webp"))
+    assert photos, "no photos found in site/public/photos"
+    h = html()
+    for name in photos:
+        assert f'/photos/{name}"' in h, name

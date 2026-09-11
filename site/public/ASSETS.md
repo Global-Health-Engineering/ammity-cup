@@ -32,14 +32,31 @@ Triangle counts and sizes are the exported `.glb`, after the web-model
 decimation `render_parts.py` applies; source CAD is far heavier (see
 `tools/render_parts.py`'s size-budget comments).
 
-## photos/ (slots for supplied photos, not yet present)
+## photos/
 
-| Planned file | Shows | Replaces |
-|---|---|---|
-| `photos/prototypes-open-closed.webp` | the six prototypes open and closed (thesis Fig. 7) | Hero render |
-| `photos/flower-low-medical-grade.webp` | the clear medical-grade Flower Low | new, Device section |
-| `photos/mould-and-cast.webp` | a clamped mould, the syringe, and a cured cup with its sprue (Fig. 4) | Make section |
-| `photos/glovebox.webp` | the flight glovebox (Fig. 6) | Validation section |
+Photographs of the research prototypes, the casting process and the flight
+glovebox, supplied by the authors.
+
+| File | Shows | Source | Dimensions |
+|---|---|---|---|
+| `photos/flower-low.webp` | Flower Low cast in silicone, held between two fingers | supplied by the authors | 1108 × 1108 |
+| `photos/flower-high.webp` | Flower High cast in silicone, petals nearer the rim | supplied by the authors | 1101 × 1102 |
+| `photos/duckbill.webp` | Duckbill, seen into the opening | supplied by the authors | 1200 × 1200 |
+| `photos/twister.webp` | Twister, the orange inner skin inside the cup | supplied by the authors | 1018 × 1018 |
+| `photos/drawstring.webp` | Drawstring, test fluid leaking past the lid | supplied by the authors | 1100 × 1101 |
+| `photos/umbrella.webp` | Umbrella, the orange umbrella and green frame inside the opening | supplied by the authors | 1056 × 1055 |
+| `photos/mould-clamped.webp` | a printed mould clamped shut for casting | supplied by the authors | 900 × 900 |
+| `photos/degassing.webp` | degassing mixed silicone in a vacuum desiccator | supplied by the authors | 1001 × 1000 |
+| `photos/degassing-closeup.webp` | mixed silicone foaming under vacuum, close up | supplied by the authors | 1500 × 1500 |
+| `photos/flower-low-demoulding.webp` | Flower Low during demoulding, petals and strings cast straight along the mould core | supplied by the authors | 1449 × 1449 |
+| `photos/duckbill-half-in-mould.webp` | one Duckbill half in its open mould | supplied by the authors | 905 × 905 |
+| `photos/drawstring-lid-mould.webp` | the Drawstring lid mould halves, one holding the cast string | supplied by the authors | 748 × 839 |
+| `photos/glovebox.webp` | the flight glovebox, with artificial vaginas, syringes, tampons and SpaceCups in labelled bags | supplied by the authors | 1600 × 1200 |
+| `photos/artificial-vagina-demoulding.webp` | the self-made artificial vagina during demoulding, on its printed core with the outer mould halves opened | supplied by the authors | 1430 × 1430 |
+
+Conversion: each source photo was EXIF-transposed to its displayed
+orientation, then saved as WebP at quality 82, long edge capped at 1800 px,
+with no EXIF, ICC or XMP metadata.
 
 ## Photo rules
 
