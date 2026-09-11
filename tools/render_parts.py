@@ -3,7 +3,7 @@
 Run (meshes first, see tools/step_to_mesh.py):
     .venv/bin/python tools/step_to_mesh.py
     blender --background --python tools/render_parts.py            # all scenes
-    blender --background --python tools/render_parts.py -- flower-low   # one scene
+    blender --background --python tools/render_parts.py -- flower-sections   # one scene
 
 Scenes, part roles, orientation and mirroring are declared in
 tools/parts.py; this file only turns them into pictures. Every scene is
@@ -662,10 +662,10 @@ FLAT_LAY_GAP_MM = 12
 # past it). Section here frames the *whole* cup, so that same strength
 # also floods the already-lit outer wall and the mechanism, not just the
 # cut face it was meant for: measured 3.2-3.3x brighter (linear) on body
-# and 4.3-4.6x on mechanism than the same roles in flower-low.png, which
-# breaks the one-colour-per-role rule. 0.12 was chosen by sampling
-# alpha-masked body/mechanism patch means against flower-low.png and
-# lowering until every channel landed within 15% (see task-8-report.md
+# and 4.3-4.6x on mechanism than the same roles in flower-low-vs-high.png,
+# which breaks the one-colour-per-role rule. 0.12 was chosen by sampling
+# alpha-masked body/mechanism patch means against flower-low-vs-high.png
+# and lowering until every channel landed within 15% (see task-8-report.md
 # for the numbers), while the cut face itself (checked visually) still
 # reads as a lit surface rather than a black band.
 CUT_FILL_STRENGTH = 0.12

@@ -3,8 +3,8 @@
 
 STL has no unit header; a mould exported in metres would import 1000x too small. This check fails the build rather than shipping unprintable geometry.
 
-Usage:  python3 tools/verify_units.py "hardware/*/mould-stl/*.stl"
-   or:  python3 -m tools.verify_units "hardware/*/mould-stl/*.stl"
+Usage:  python3 tools/verify_units.py "hardware/*/mould-stl/*.stl" "hardware/*/stl/*.stl"
+   or:  python3 -m tools.verify_units "hardware/*/mould-stl/*.stl" "hardware/*/stl/*.stl"
 """
 import glob
 import os
@@ -65,4 +65,4 @@ def main(paths):
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:] or ["hardware/*/mould-stl/*.stl"]))
+    sys.exit(main(sys.argv[1:] or ["hardware/*/mould-stl/*.stl", "hardware/*/stl/*.stl"]))
