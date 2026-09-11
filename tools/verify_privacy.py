@@ -34,7 +34,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_HASHES = os.path.join(ROOT, "tools", "privacy_hashes.txt")
 TEXT_SUFFIXES = (".md", ".astro", ".json", ".csv", ".txt", ".js", ".mjs",
-                 ".cff", ".yml", ".yaml", ".html", ".css", ".py", ".svg")
+                 ".cff", ".yml", ".yaml", ".html", ".css", ".py", ".svg",
+                 ".step")
 MAX_NGRAM = 3
 
 _WORD = re.compile(r"[^\W\d_]+")
@@ -87,27 +88,27 @@ def scan_binary(path):
     return _WINDOWS_PATH_UTF16 in data
 
 
-def default_files():
+def default_files(root=ROOT):
     out = subprocess.run(["git", "ls-files", "-z"], capture_output=True,
-                         check=True, cwd=ROOT).stdout.decode()
-    return [os.path.join(ROOT, p) for p in out.split("\0")
+                         check=True, cwd=root).stdout.decode()
+    return [os.path.join(root, p) for p in out.split("\0")
             if p and p.lower().endswith(TEXT_SUFFIXES)
             and p != "tools/privacy_hashes.txt"]
 
 
-def default_binary_files():
+def default_binary_files(root=ROOT):
     """Tracked files that are not scanned as text, for `scan_binary`.
 
     .venv/ and node_modules/ are never tracked, so no extra filtering for
     them is needed here.
     """
     out = subprocess.run(["git", "ls-files", "-z"], capture_output=True,
-                         check=True, cwd=ROOT).stdout.decode()
-    return [os.path.join(ROOT, p) for p in out.split("\0")
+                         check=True, cwd=root).stdout.decode()
+    return [os.path.join(root, p) for p in out.split("\0")
             if p and not p.lower().endswith(TEXT_SUFFIXES)]
 
 
-def main(patterns=None, hashes_path=DEFAULT_HASHES):
+def main(patterns=None, hashes_path=DEFAULT_HASHES, root=ROOT):
     # Fail closed: without a usable hash list the name check would
     # silently do nothing (scan_text skips n-grams when hashes is empty)
     # and a leak would be indistinguishable from a clean run.
@@ -126,8 +127,8 @@ def main(patterns=None, hashes_path=DEFAULT_HASHES):
                         if os.path.isfile(f) and f.lower().endswith(TEXT_SUFFIXES)})
         binary_files = []
     else:
-        files = default_files()
-        binary_files = default_binary_files()
+        files = default_files(root)
+        binary_files = default_binary_files(root)
     if not files and not binary_files:
         print("verify_privacy: no files matched", file=sys.stderr)
         return 1
@@ -137,12 +138,12 @@ def main(patterns=None, hashes_path=DEFAULT_HASHES):
             for line_no, kind in scan_text(f.read(), hashes):
                 failed += 1
                 # Never echo the matching text: that would print the name.
-                print(f"  FAIL  {os.path.relpath(path, ROOT)}:{line_no}  {kind}")
+                print(f"  FAIL  {os.path.relpath(path, root)}:{line_no}  {kind}")
     for path in binary_files:
         if scan_binary(path):
             failed += 1
             # Never echo the matching bytes: that would print the path.
-            print(f"  FAIL  {os.path.relpath(path, ROOT)}  windows-path (binary)")
+            print(f"  FAIL  {os.path.relpath(path, root)}  windows-path (binary)")
     if failed:
         print(f"\n{failed} personal-data hit(s). Remove or anonymise them (P1-P3).")
         return 1

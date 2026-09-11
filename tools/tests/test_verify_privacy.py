@@ -1,4 +1,5 @@
 import os
+import subprocess
 from tools.verify_privacy import name_hash, scan_text, load_hashes, main, scan_binary
 
 FAKE = "Zelda Quux"
@@ -47,6 +48,37 @@ def test_main_fails_closed_on_missing_hash_file(tmp_path):
     missing = tmp_path / "does-not-exist.txt"
     good = tmp_path / "g.md"; good.write_text("P1 and P2\n")
     assert main([str(good)], hashes_path=str(missing)) == 1
+
+def _init_git_repo(path):
+    subprocess.run(["git", "init", "-q"], cwd=path, check=True)
+    subprocess.run(["git", "config", "user.email", "test" + "@" + "example.com"], cwd=path, check=True)
+    subprocess.run(["git", "config", "user.name", "Test"], cwd=path, check=True)
+
+
+def _commit_binary_file(path, name, data):
+    (path / name).write_bytes(data)
+    subprocess.run(["git", "add", "-A"], cwd=path, check=True)
+    subprocess.run(["git", "commit", "-q", "-m", "add binary"], cwd=path, check=True)
+
+
+def test_main_default_binary_branch_catches_a_windows_path(tmp_path):
+    """main()'s default (patterns=None) branch scans tracked non-text
+    files with scan_binary, not just scan_text on the patterns branch."""
+    _init_git_repo(str(tmp_path))
+    h = tmp_path / "h.txt"
+    h.write_text(name_hash(FAKE) + "\n")
+    path_bytes = ("C:" + "\\Users\\someone\\Desktop\\x").encode("ascii")
+    _commit_binary_file(tmp_path, "part.prt", b"\x00\x01" + path_bytes + b"\x00")
+    assert main(hashes_path=str(h), root=str(tmp_path)) == 1
+
+
+def test_main_default_binary_branch_passes_on_clean_binary(tmp_path):
+    _init_git_repo(str(tmp_path))
+    h = tmp_path / "h.txt"
+    h.write_text(name_hash(FAKE) + "\n")
+    _commit_binary_file(tmp_path, "part.prt", os.urandom(64))
+    assert main(hashes_path=str(h), root=str(tmp_path)) == 0
+
 
 def test_binary_windows_path_is_caught(tmp_path):
     path_bytes = b"\\Users\\someone\\x"

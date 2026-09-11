@@ -123,7 +123,6 @@ def test_clean_extent_stops_where_thin_slivers_begin():
     assert 0 <= lo < 0.5 and 9 - 0.5 < hi < 9, (lo, hi)
 
 def test_drawstring_shows_its_lid_as_mechanism():
-
     groups = SCENES["concept-drawstring"].groups
     lid = [g for g in groups if g.steps == ("hardware/drawstring/step/drawstring.step",)]
     assert len(lid) == 1 and lid[0].default_role == "mechanism"
