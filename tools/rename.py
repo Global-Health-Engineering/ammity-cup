@@ -1,9 +1,7 @@
 """The one file-name rule for everything copied into hardware/.
 
 STEP and STL names are normalised mechanically so they read consistently
-in a URL and a shell; NX .prt files are NOT renamed (NX part files can
-reference each other by name, and a rename would break that), so this
-rule is never applied to them. Digits are kept: some are piece indices
+in a URL and a shell. Digits are kept: some are piece indices
 (twister_skin_mold_1 to _6) that a rule cannot tell apart from version
 numbers.
 """

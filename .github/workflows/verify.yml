@@ -24,8 +24,8 @@ jobs:
         # the git-ignored incoming/ and build/ trees, skip themselves.
         run: python3 -m pytest tools/tests -v
 
-      - name: Mould STLs are millimetres
-        run: python3 tools/verify_units.py "hardware/*/mould-stl/*.stl"
+      - name: STLs are millimetres
+        run: python3 tools/verify_units.py "hardware/*/mould-stl/*.stl" "hardware/*/stl/*.stl"
 
       - name: No out-of-scope files
         run: python3 tools/verify_scope.py

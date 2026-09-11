@@ -29,7 +29,7 @@
 | Best bench score          | Flower Low and Flower High, 24/25                                         |
 | Flown                     | Flower Low, Asclepios VI parabolic-flight campaign                        |
 | Manufacture                | Cast silicone in 3D-printed moulds                                        |
-| CAD                        | Siemens NX, plus STEP                                                     |
+| CAD                        | Siemens NX source, shipped as STEP                                        |
 | Status                     | Research prototype                                                        |
 
 ## Quick start
@@ -44,8 +44,8 @@
 ```
 hardware/              CERN-OHL-P v2: the cup and mould geometry
 ├── README.md          Variant table, file map, rename map
-├── nx.md              Native Siemens NX source CAD and STEP re-export
-├── flower-low/         Flown mechanism (nx/, step/, mould-stl/)
+├── nx.md              Siemens NX source CAD and the STEP editable format
+├── flower-low/         Flown mechanism (step/, stl/, mould-stl/)
 ├── flower-high/        Bench-tested Flower variant
 ├── twister/             Bench-tested mechanism
 ├── umbrella/            Bench-tested mechanism
@@ -85,7 +85,7 @@ Different parts of this repository are released under different licenses, follow
 
 | Component                                                    | License                                    |
 | ------------------------------------------------------------ | ------------------------------------------ |
-| Hardware design (NX, STEP, mould STL in [`hardware/`](hardware/)) | [CERN-OHL-P v2](LICENSE-CERN-OHL-P-2.0.md) |
+| Hardware design (STEP, whole-part STL, mould STL in [`hardware/`](hardware/)) | [CERN-OHL-P v2](LICENSE-CERN-OHL-P-2.0.md) |
 | Documentation, data, site and tooling                          | [CC BY 4.0](LICENSE-CC-BY-4.0.md)          |
 
 ## Acknowledgements

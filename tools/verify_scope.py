@@ -5,9 +5,10 @@ published.
 Never tracked here: the thesis itself (not released, D4), the flight
 questionnaires and the training slides (they name the analogue astronauts
 and carry a personal email address), NX/STEP translation logs (they embed
-the author's local Windows path), planning content, intermediate meshes,
-raw video, and any certification artwork the project is not entitled to
-display (the project is not certified, D8).
+the author's local Windows path), native NX part files (they also embed
+the author's local file paths; STEP is the editable format), planning
+content, intermediate meshes, raw video, and any certification artwork the
+project is not entitled to display (the project is not certified, D8).
 
 Only paths Git tracks are checked (`git ls-files`), so the staging
 directory incoming/, which is git-ignored, never trips it; anything
@@ -45,6 +46,7 @@ BANNED_EXTENSIONS = [
     ".log",
     ".mov", ".mp4", ".heic",
     ".blend", ".blend1",
+    ".prt",
 ]
 
 # Reviewed exceptions to BANNED_SUBSTRINGS: the anonymised questionnaire

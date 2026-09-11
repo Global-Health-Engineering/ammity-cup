@@ -6,7 +6,7 @@ const files = [
   { part: 'Cup, Flower Low (6 solids: body halves, rim pieces, petals and strings)', file: 'flower-low/step/flower-cup-withrim-part.step' },
   { part: 'Mould, 6 pieces', file: 'flower-low/step/flower-cup-withrim-mould.step' },
   { part: 'Mould, print-ready', file: 'flower-low/mould-stl/ (8 STL)' },
-  { part: 'Native CAD', file: 'flower-low/nx/ (Siemens NX .prt)' },
+  { part: 'Cup and mould, whole-part meshes', file: 'flower-low/stl/ (4 STL)' },
 ];
 const renders = [
   { name: 'flower-low', alt: 'Flower Low SpaceCup, three-quarter view: grey silicone body, magenta petals at the opening; the pull strings are shown straight, as cast.', caption: 'Flower Low: petals (magenta) close the opening when the strings are pulled.' },
@@ -46,8 +46,8 @@ const renders = [
     </table>
   </div>
   <p class="table-note">
-    The source CAD is Siemens NX; every part also ships as STEP for any
-    other CAD package. See <a href={`${site.repo}/blob/main/hardware/nx.md`}>hardware/nx.md</a>
+    The source CAD is Siemens NX; every part ships as STEP, the editable
+    format, plus a whole-part STL for viewing. See <a href={`${site.repo}/blob/main/hardware/nx.md`}>hardware/nx.md</a>
     and <a href={`${site.repo}/blob/main/hardware/README.md`}>hardware/README.md</a>.
   </p>
 </section>

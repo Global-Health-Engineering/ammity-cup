@@ -15,9 +15,9 @@ OUT = [
     "site/public/brand/certification-mark-CH000099-wide.svg",
     "site/public/video/raw.mp4",
     "hardware/flower-low/scene.blend",
+    "hardware/flower-low/nx/flower_cup_withrim_part_m.prt",
 ]
 IN = [
-    "hardware/flower-low/nx/flower_cup_withrim_part_m.prt",
     "hardware/flower-low/step/flower-cup-withrim-part.step",
     "hardware/flower-low/mould-stl/flower-cup-withrim-mould-topleft.stl",
     "docs/moulding-guide.pdf",

@@ -21,7 +21,7 @@ Bench scores are the `overall` column of [`../data/ground-test-scores.csv`](../d
 ## What is in each folder
 
 - `step/` holds the cup and mould B-rep, editable.
-- `nx/` holds the native Siemens NX parts, with original names.
+- `stl/` holds the whole cup and whole mould as single meshes, for viewing and CAM; print from `mould-stl/`, which holds the split, print-ready pieces.
 - `mould-stl/` holds the print-ready mould pieces.
 
 ## Which files are the cup and which are the mould
@@ -47,14 +47,14 @@ The moulds print in ASA when the silicone needs a heated, 100 °C cure (medical-
 Every STL and STEP file here is in millimetres, checked in CI:
 
 ```bash
-python3 tools/verify_units.py "hardware/*/mould-stl/*.stl"
+python3 tools/verify_units.py "hardware/*/mould-stl/*.stl" "hardware/*/stl/*.stl"
 ```
 
 STEP files declare `SI_UNIT(.MILLI.,.METRE.)` and need no conversion.
 
 ## Rename map
 
-The thesis and the native NX files use the author's original names. This repository renames every shipped file to a consistent, lower-case, hyphenated scheme. The table below is the full old to new mapping.
+The thesis uses the author's original names. This repository renames every shipped file to a consistent, lower-case, hyphenated scheme. The table below is the full old to new mapping.
 
 | Original (thesis / NX) | In this repository |
 |---|---|
@@ -70,10 +70,10 @@ The thesis and the native NX files use the author's original names. This reposit
 | `Flower Low Cup/Step files/flower_cup_withrim_part_m.stp` | `flower-low/step/flower-cup-withrim-part.step` |
 | `Flower Low Cup/Step files/flower_stopper_m.stp` | `flower-low/step/flower-stopper.step` |
 | `Flower Low Cup/Step files/flower_stopper_mold_m.stp` | `flower-low/step/flower-stopper-mould.step` |
-| `Flower Low Cup/flower_cup_withrim_mold_m.prt` | `flower-low/nx/flower_cup_withrim_mold_m.prt` |
-| `Flower Low Cup/flower_cup_withrim_part_m.prt` | `flower-low/nx/flower_cup_withrim_part_m.prt` |
-| `Flower Low Cup/flower_stopper_m.prt` | `flower-low/nx/flower_stopper_m.prt` |
-| `Flower Low Cup/flower_stopper_mold_m.prt` | `flower-low/nx/flower_stopper_mold_m.prt` |
+| `Flower Low Cup/Stl files/flower_cup_withrim_mold_m.stl` | `flower-low/stl/flower-cup-withrim-mould.stl` |
+| `Flower Low Cup/Stl files/flower_cup_withrim_part_m.stl` | `flower-low/stl/flower-cup-withrim-part.stl` |
+| `Flower Low Cup/Stl files/flower_stopper_m.stl` | `flower-low/stl/flower-stopper.stl` |
+| `Flower Low Cup/Stl files/flower_stopper_mold_m.stl` | `flower-low/stl/flower-stopper-mould.stl` |
 | `Flower High Cup/Print Flower high/flower_cup_withrim_higher_mold_inleft.stl` | `flower-high/mould-stl/flower-cup-withrim-higher-mould-inleft.stl` |
 | `Flower High Cup/Print Flower high/flower_cup_withrim_higher_mold_inright.stl` | `flower-high/mould-stl/flower-cup-withrim-higher-mould-inright.stl` |
 | `Flower High Cup/Print Flower high/flower_cup_withrim_higher_mold_outbottomleft.stl` | `flower-high/mould-stl/flower-cup-withrim-higher-mould-outbottomleft.stl` |
@@ -82,8 +82,8 @@ The thesis and the native NX files use the author's original names. This reposit
 | `Flower High Cup/Print Flower high/flower_cup_withrim_higher_mold_outtopright.stl` | `flower-high/mould-stl/flower-cup-withrim-higher-mould-outtopright.stl` |
 | `Flower High Cup/Step files/flower_cup_withrim_higher_m.stp` | `flower-high/step/flower-cup-withrim-higher.step` |
 | `Flower High Cup/Step files/flower_cup_withrim_higher_mold_m.stp` | `flower-high/step/flower-cup-withrim-higher-mould.step` |
-| `Flower High Cup/flower_cup_withrim_higher_m.prt` | `flower-high/nx/flower_cup_withrim_higher_m.prt` |
-| `Flower High Cup/flower_cup_withrim_higher_mold_m.prt` | `flower-high/nx/flower_cup_withrim_higher_mold_m.prt` |
+| `Flower High Cup/Stl files/flower_cup_withrim_higher_m.stl` | `flower-high/stl/flower-cup-withrim-higher.stl` |
+| `Flower High Cup/Stl files/flower_cup_withrim_higher_mold_m.stl` | `flower-high/stl/flower-cup-withrim-higher-mould.stl` |
 | `Twister Cup/Print Twister/Twister_Cup_Top2_bottom.stl` | `twister/mould-stl/twister-cup-top2-bottom.stl` |
 | `Twister Cup/Print Twister/Twister_Cup_Top2_middle.stl` | `twister/mould-stl/twister-cup-top2-middle.stl` |
 | `Twister Cup/Print Twister/Twister_Cup_Top2_middleoutside.stl` | `twister/mould-stl/twister-cup-top2-middleoutside.stl` |
@@ -106,12 +106,12 @@ The thesis and the native NX files use the author's original names. This reposit
 | `Twister Cup/Step files/twister_cup_bottom_withdent_mold.stp` | `twister/step/twister-cup-bottom-withdent-mould.step` |
 | `Twister Cup/Step files/twister_skin.stp` | `twister/step/twister-skin.step` |
 | `Twister Cup/Step files/twister_skin_mold.stp` | `twister/step/twister-skin-mould.step` |
-| `Twister Cup/Twister_Cup_Top_m.prt` | `twister/nx/Twister_Cup_Top_m.prt` |
-| `Twister Cup/Twister_Cup_Top_mold.prt` | `twister/nx/Twister_Cup_Top_mold.prt` |
-| `Twister Cup/twister_cup_bottom_withdent.prt` | `twister/nx/twister_cup_bottom_withdent.prt` |
-| `Twister Cup/twister_cup_bottom_withdent_mold.prt` | `twister/nx/twister_cup_bottom_withdent_mold.prt` |
-| `Twister Cup/twister_skin.prt` | `twister/nx/twister_skin.prt` |
-| `Twister Cup/twister_skin_mold.prt` | `twister/nx/twister_skin_mold.prt` |
+| `Twister Cup/Stl files/Twister_Cup_Top_m.stl` | `twister/stl/twister-cup-top.stl` |
+| `Twister Cup/Stl files/Twister_Cup_Top_mold.stl` | `twister/stl/twister-cup-top-mould.stl` |
+| `Twister Cup/Stl files/twister_cup_bottom_withdent.stl` | `twister/stl/twister-cup-bottom-withdent.stl` |
+| `Twister Cup/Stl files/twister_cup_bottom_withdent_mold.stl` | `twister/stl/twister-cup-bottom-withdent-mould.stl` |
+| `Twister Cup/Stl files/twister_skin.stl` | `twister/stl/twister-skin.stl` |
+| `Twister Cup/Stl files/twister_skin_mold.stl` | `twister/stl/twister-skin-mould.stl` |
 | `Umbrella Cup/Print Umbrella/menstrual_cup_medium_without_umbrella_mold_insideleft.stl` | `umbrella/mould-stl/menstrual-cup-medium-without-umbrella-mould-insideleft.stl` |
 | `Umbrella Cup/Print Umbrella/menstrual_cup_medium_without_umbrella_mold_insideright.stl` | `umbrella/mould-stl/menstrual-cup-medium-without-umbrella-mould-insideright.stl` |
 | `Umbrella Cup/Print Umbrella/menstrual_cup_medium_without_umbrella_mold_outsideleft_m.stl` | `umbrella/mould-stl/menstrual-cup-medium-without-umbrella-mould-outsideleft.stl` |
@@ -131,15 +131,15 @@ The thesis and the native NX files use the author's original names. This reposit
 | `Umbrella Cup/Step files/umbrella_top_open_Full_m.stp` | `umbrella/step/umbrella-top-open-full.step` |
 | `Umbrella Cup/Step files/umbrella_top_open_Full_mold_m.stp` | `umbrella/step/umbrella-top-open-full-mould.step` |
 | `Umbrella Cup/Step files/umbrella_top_open_Full_wings_mold.stp` | `umbrella/step/umbrella-top-open-full-wings-mould.step` |
-| `Umbrella Cup/menstrual_cup_medium_without_umbrella_m.prt` | `umbrella/nx/menstrual_cup_medium_without_umbrella_m.prt` |
-| `Umbrella Cup/menstrual_cup_medium_without_umbrella_mold_m.prt` | `umbrella/nx/menstrual_cup_medium_without_umbrella_mold_m.prt` |
-| `Umbrella Cup/umbrella_contain_silicone.prt` | `umbrella/nx/umbrella_contain_silicone.prt` |
-| `Umbrella Cup/umbrella_contain_silicone_mold.prt` | `umbrella/nx/umbrella_contain_silicone_mold.prt` |
-| `Umbrella Cup/umbrella_top_open_Full_m.prt` | `umbrella/nx/umbrella_top_open_Full_m.prt` |
-| `Umbrella Cup/umbrella_top_open_Full_mold_m.prt` | `umbrella/nx/umbrella_top_open_Full_mold_m.prt` |
-| `Umbrella Cup/umbrella_top_open_Full_wings_mold.prt` | `umbrella/nx/umbrella_top_open_Full_wings_mold.prt` |
-| `Drawstring Cup/Drawsting.prt` | `drawstring/nx/Drawsting.prt` |
-| `Drawstring Cup/Drawsting_mold.prt` | `drawstring/nx/Drawsting_mold.prt` |
+| `Umbrella Cup/Stl files/menstrual_cup_medium_without_umbrella_m.stl` | `umbrella/stl/menstrual-cup-medium-without-umbrella.stl` |
+| `Umbrella Cup/Stl files/menstrual_cup_medium_without_umbrella_mold_m.stl` | `umbrella/stl/menstrual-cup-medium-without-umbrella-mould.stl` |
+| `Umbrella Cup/Stl files/umbrella_contain_silicone.stl` | `umbrella/stl/umbrella-contain-silicone.stl` |
+| `Umbrella Cup/Stl files/umbrella_contain_silicone_mold.stl` | `umbrella/stl/umbrella-contain-silicone-mould.stl` |
+| `Umbrella Cup/Stl files/umbrella_top_open_Full_m.stl` | `umbrella/stl/umbrella-top-open-full.stl` |
+| `Umbrella Cup/Stl files/umbrella_top_open_Full_mold_m.stl` | `umbrella/stl/umbrella-top-open-full-mould.stl` |
+| `Umbrella Cup/Stl files/umbrella_top_open_Full_wings_mold.stl` | `umbrella/stl/umbrella-top-open-full-wings-mould.stl` |
+| `Drawstring Cup/Stl files/Drawsting.stl` | `drawstring/stl/drawstring.stl` |
+| `Drawstring Cup/Stl files/Drawsting_mold.stl` | `drawstring/stl/drawstring-mould.stl` |
 | `Drawstring Cup/Print Drawstring/Drawsting2_mold_bottom.stl` | `drawstring/mould-stl/drawstring2-mould-bottom.stl` |
 | `Drawstring Cup/Print Drawstring/Drawsting2_mold_top.stl` | `drawstring/mould-stl/drawstring2-mould-top.stl` |
 | `Drawstring Cup/Print Drawstring/menstrual_cup_medium_drawstring5_inbottomleft.stl` | `drawstring/mould-stl/menstrual-cup-medium-drawstring5-inbottomleft.stl` |
@@ -153,17 +153,17 @@ The thesis and the native NX files use the author's original names. This reposit
 | `Drawstring Cup/Step files/Drawsting_mold.stp` | `drawstring/step/drawstring-mould.step` |
 | `Drawstring Cup/Step files/menstrual_cup_medium_drawstring.stp` | `drawstring/step/menstrual-cup-medium-drawstring.step` |
 | `Drawstring Cup/Step files/menstrual_cup_medium_drawstring_mold.stp` | `drawstring/step/menstrual-cup-medium-drawstring-mould.step` |
-| `Drawstring Cup/menstrual_cup_medium_drawstring.prt` | `drawstring/nx/menstrual_cup_medium_drawstring.prt` |
-| `Drawstring Cup/menstrual_cup_medium_drawstring_mold.prt` | `drawstring/nx/menstrual_cup_medium_drawstring_mold.prt` |
+| `Drawstring Cup/Stl files/menstrual_cup_medium_drawstring.stl` | `drawstring/stl/menstrual-cup-medium-drawstring.stl` |
+| `Drawstring Cup/Stl files/menstrual_cup_medium_drawstring_mold.stl` | `drawstring/stl/menstrual-cup-medium-drawstring-mould.stl` |
 | `Duckbill Cup/Print Duckbill/duckbill2_half_withrim_insidebottom.stl` | `duckbill/mould-stl/duckbill2-half-withrim-insidebottom.stl` |
 | `Duckbill Cup/Print Duckbill/duckbill2_half_withrim_insidetop.stl` | `duckbill/mould-stl/duckbill2-half-withrim-insidetop.stl` |
 | `Duckbill Cup/Print Duckbill/duckbill2_half_withrim_outsideleft.stl` | `duckbill/mould-stl/duckbill2-half-withrim-outsideleft.stl` |
 | `Duckbill Cup/Print Duckbill/duckbill2_half_withrim_outsideright.stl` | `duckbill/mould-stl/duckbill2-half-withrim-outsideright.stl` |
 | `Duckbill Cup/Step files/duckbill_half_withrim.stp` | `duckbill/step/duckbill-half-withrim.step` |
 | `Duckbill Cup/Step files/duckbill_half_withrim_mold.stp` | `duckbill/step/duckbill-half-withrim-mould.step` |
-| `Duckbill Cup/duckbill_half_withrim.prt` | `duckbill/nx/duckbill_half_withrim.prt` |
-| `Duckbill Cup/duckbill_half_withrim_mold.prt` | `duckbill/nx/duckbill_half_withrim_mold.prt` |
-| `Balloon Cup/Balloon_Top_mold.prt` | `balloon/nx/Balloon_Top_mold.prt` |
+| `Duckbill Cup/Stl files/duckbill_half_withrim.stl` | `duckbill/stl/duckbill-half-withrim.stl` |
+| `Duckbill Cup/Stl files/duckbill_half_withrim_mold.stl` | `duckbill/stl/duckbill-half-withrim-mould.stl` |
+| `Balloon Cup/Stl files/Balloon_Top_mold.stl` | `balloon/stl/balloon-top-mould.stl` |
 | `Balloon Cup/Print Balloon (with pipe)/Balloon_Top_1_Mold1_outsideleft.stl` | `balloon/mould-stl/balloon-top-1-mould1-outsideleft.stl` |
 | `Balloon Cup/Print Balloon (with pipe)/Balloon_Top_1_Mold1_outsideright.stl` | `balloon/mould-stl/balloon-top-1-mould1-outsideright.stl` |
 | `Balloon Cup/Print Balloon (with pipe)/Balloon_Top_2_Mold_insideleft.stl` | `balloon/mould-stl/balloon-top-2-mould-insideleft.stl` |
@@ -183,10 +183,10 @@ The thesis and the native NX files use the author's original names. This reposit
 | `Balloon Cup/Step files/balloon_pipe_mold.stp` | `balloon/step/balloon-pipe-mould.step` |
 | `Balloon Cup/Step files/menstrual_cup_medium_without_balloon.stp` | `balloon/step/menstrual-cup-medium-without-balloon.step` |
 | `Balloon Cup/Step files/menstrual_cup_medium_without_balloon_mold.stp` | `balloon/step/menstrual-cup-medium-without-balloon-mould.step` |
-| `Balloon Cup/balloon_pipe.prt` | `balloon/nx/balloon_pipe.prt` |
-| `Balloon Cup/balloon_pipe_mold.prt` | `balloon/nx/balloon_pipe_mold.prt` |
-| `Balloon Cup/menstrual_cup_medium_without_balloon.prt` | `balloon/nx/menstrual_cup_medium_without_balloon.prt` |
-| `Balloon Cup/menstrual_cup_medium_without_balloon_mold.prt` | `balloon/nx/menstrual_cup_medium_without_balloon_mold.prt` |
+| `Balloon Cup/Stl files/balloon_pipe.stl` | `balloon/stl/balloon-pipe.stl` |
+| `Balloon Cup/Stl files/balloon_pipe_mold.stl` | `balloon/stl/balloon-pipe-mould.stl` |
+| `Balloon Cup/Stl files/menstrual_cup_medium_without_balloon.stl` | `balloon/stl/menstrual-cup-medium-without-balloon.stl` |
+| `Balloon Cup/Stl files/menstrual_cup_medium_without_balloon_mold.stl` | `balloon/stl/menstrual-cup-medium-without-balloon-mould.stl` |
 | `Extraction Valve/Print valve and button/cup_valve_button_left2.stl` | `extraction-valve/mould-stl/cup-valve-button-left2.stl` |
 | `Extraction Valve/Print valve and button/cup_valve_button_right2.stl` | `extraction-valve/mould-stl/cup-valve-button-right2.stl` |
 | `Extraction Valve/Print valve and button/menstrual_cup_valve_inside.stl` | `extraction-valve/mould-stl/menstrual-cup-valve-inside.stl` |
@@ -196,15 +196,15 @@ The thesis and the native NX files use the author's original names. This reposit
 | `Extraction Valve/Step files/cup_valve_button_mold.stp` | `extraction-valve/step/cup-valve-button-mould.step` |
 | `Extraction Valve/Step files/menstrual_cup_valve.stp` | `extraction-valve/step/menstrual-cup-valve.step` |
 | `Extraction Valve/Step files/menstrual_cup_valve_mold.stp` | `extraction-valve/step/menstrual-cup-valve-mould.step` |
-| `Extraction Valve/cup_valve_button.prt` | `extraction-valve/nx/cup_valve_button.prt` |
-| `Extraction Valve/cup_valve_button_mold.prt` | `extraction-valve/nx/cup_valve_button_mold.prt` |
-| `Extraction Valve/menstrual_cup_valve.prt` | `extraction-valve/nx/menstrual_cup_valve.prt` |
-| `Extraction Valve/menstrual_cup_valve_mold.prt` | `extraction-valve/nx/menstrual_cup_valve_mold.prt` |
+| `Extraction Valve/Stl files/cup_valve_button.stl` | `extraction-valve/stl/cup-valve-button.stl` |
+| `Extraction Valve/Stl files/cup_valve_button_mold.stl` | `extraction-valve/stl/cup-valve-button-mould.stl` |
+| `Extraction Valve/Stl files/menstrual_cup_valve.stl` | `extraction-valve/stl/menstrual-cup-valve.stl` |
+| `Extraction Valve/Stl files/menstrual_cup_valve_mold.stl` | `extraction-valve/stl/menstrual-cup-valve-mould.stl` |
 | `Artificial Vagina/Print Vagina/parabolicflight_vagina2_inleft.stl` | `artificial-vagina/mould-stl/parabolicflight-vagina2-inleft.stl` |
 | `Artificial Vagina/Print Vagina/parabolicflight_vagina2_inright.stl` | `artificial-vagina/mould-stl/parabolicflight-vagina2-inright.stl` |
 | `Artificial Vagina/Print Vagina/parabolicflight_vagina2_outsideleft.stl` | `artificial-vagina/mould-stl/parabolicflight-vagina2-outsideleft.stl` |
 | `Artificial Vagina/Print Vagina/parabolicflight_vagina2_outsideright.stl` | `artificial-vagina/mould-stl/parabolicflight-vagina2-outsideright.stl` |
 | `Artificial Vagina/Step files/parabolicflight_vagina.stp` | `artificial-vagina/step/parabolicflight-vagina.step` |
 | `Artificial Vagina/Step files/parabolicflight_vagina_mold.stp` | `artificial-vagina/step/parabolicflight-vagina-mould.step` |
-| `Artificial Vagina/parabolicflight_vagina.prt` | `artificial-vagina/nx/parabolicflight_vagina.prt` |
-| `Artificial Vagina/parabolicflight_vagina_mold.prt` | `artificial-vagina/nx/parabolicflight_vagina_mold.prt` |
+| `Artificial Vagina/Stl files/parabolicflight_vagina.stl` | `artificial-vagina/stl/parabolicflight-vagina.stl` |
+| `Artificial Vagina/Stl files/parabolicflight_vagina_mold.stl` | `artificial-vagina/stl/parabolicflight-vagina-mould.stl` |

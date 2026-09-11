@@ -10,17 +10,18 @@ def files(pattern):
     return sorted(glob.glob(os.path.join(HW, pattern)))
 
 @pytest.mark.parametrize("slug", sorted(VARIANT_DIRS.values()))
-def test_every_variant_has_step_nx_and_mould_stl(slug):
-    for sub in ("step", "nx", "mould-stl"):
+def test_every_variant_has_step_and_mould_stl(slug):
+    for sub in ("step", "mould-stl"):
         assert os.listdir(os.path.join(HW, slug, sub)), f"{slug}/{sub} is empty"
 
 def test_counts():
     assert len(files("*/step/*.step")) == 36
-    assert len(files("*/nx/*.prt")) == 36
     assert len(files("*/mould-stl/*.stl")) == 78
+    assert len(files("*/stl/*.stl")) == 36
+    assert files("*/nx/*.prt") == []
 
 def test_step_and_stl_names_follow_the_rule():
-    for p in files("*/step/*") + files("*/mould-stl/*"):
+    for p in files("*/step/*") + files("*/mould-stl/*") + files("*/stl/*"):
         assert kebab(os.path.basename(p)) == os.path.basename(p), p
 
 def test_step_files_declare_millimetres():
@@ -30,7 +31,7 @@ def test_step_files_declare_millimetres():
 
 def test_no_stray_file_types():
     for p in glob.glob(os.path.join(HW, "*", "*", "*")):
-        assert os.path.splitext(p)[1] in (".step", ".prt", ".stl"), p
+        assert os.path.splitext(p)[1] in (".step", ".stl"), p
 
 @pytest.mark.skipif(not os.path.isdir(INCOMING), reason="incoming/ not present (CI)")
 def test_byte_identical_to_the_supplied_files():
@@ -38,5 +39,5 @@ def test_byte_identical_to_the_supplied_files():
     shipped = {sha(p) for p in files("*/*/*")}
     for folder in VARIANT_DIRS:
         for p in glob.glob(os.path.join(INCOMING, folder, "**", "*"), recursive=True):
-            if p.lower().endswith((".prt", ".stp", ".stl")):
+            if p.lower().endswith((".stp", ".stl")):
                 assert sha(p) in shipped, p

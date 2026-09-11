@@ -1,4 +1,5 @@
-from tools.verify_privacy import name_hash, scan_text, load_hashes, main
+import os
+from tools.verify_privacy import name_hash, scan_text, load_hashes, main, scan_binary
 
 FAKE = "Zelda Quux"
 
@@ -46,3 +47,17 @@ def test_main_fails_closed_on_missing_hash_file(tmp_path):
     missing = tmp_path / "does-not-exist.txt"
     good = tmp_path / "g.md"; good.write_text("P1 and P2\n")
     assert main([str(good)], hashes_path=str(missing)) == 1
+
+def test_binary_windows_path_is_caught(tmp_path):
+    path_bytes = b"\\Users\\someone\\x"
+    ascii_bin = tmp_path / "x.bin"
+    ascii_bin.write_bytes(b"\x00\x01" + b"C:" + path_bytes + b"\x00")
+    assert scan_binary(str(ascii_bin)) is True
+
+    utf16_bin = tmp_path / "y.bin"
+    utf16_bin.write_bytes(b"\x00\x01" + ("C:" + path_bytes.decode("ascii")).encode("utf-16-le") + b"\x00")
+    assert scan_binary(str(utf16_bin)) is True
+
+    clean_bin = tmp_path / "z.bin"
+    clean_bin.write_bytes(os.urandom(64))
+    assert scan_binary(str(clean_bin)) is False

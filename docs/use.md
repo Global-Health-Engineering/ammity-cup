@@ -12,7 +12,7 @@ For the Flower mechanisms, activation means pulling the strings that run from th
 
 ## Extraction
 
-Extraction follows activation: once the mechanism is closed and the fluid sealed in, the cup is drawn out by the stem. The bench evaluation, run under lab conditions, scored insertion, extraction and resetting together as usability, highest for Flower Low (thesis pp.20-21); in reduced gravity, analogue-astronaut testers reported that both insertion and extraction were generally easy to perform (thesis p.22; see [`validation.md`](validation.md)).
+Extraction follows activation: once the mechanism is closed and the fluid sealed in, the cup is drawn out by the stem. The bench evaluation, run under lab conditions, scored insertion, extraction and resetting together as usability, joint highest for Flower Low (with the Duckbill) (thesis pp.20-21); in reduced gravity, analogue-astronaut testers reported that both insertion and extraction were generally easy to perform (thesis p.22; see [`validation.md`](validation.md)).
 
 ## Resetting the Flower
 

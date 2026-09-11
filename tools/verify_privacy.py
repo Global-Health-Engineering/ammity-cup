@@ -14,6 +14,11 @@ Three things are checked in every tracked text file and in the built site:
     writes into STEP translation logs.
   * email addresses.
 
+Tracked files that are not text (STL meshes, images) are not scanned for
+names or emails, but are still scanned for a Windows user-profile path
+with `scan_binary`, since NX can embed one in a binary export just as it
+does in a text log.
+
 Usage:  python3 tools/verify_privacy.py                 (tracked text files)
    or:  python3 tools/verify_privacy.py "site/dist/**/*.html"
 """
@@ -34,6 +39,8 @@ MAX_NGRAM = 3
 
 _WORD = re.compile(r"[^\W\d_]+")
 _WINDOWS_PATH = re.compile(r"[a-z]:\\{1,2}users\\{1,2}", re.IGNORECASE)
+_WINDOWS_PATH_BINARY = re.compile(rb"[a-z]:\\{1,2}users\\{1,2}", re.IGNORECASE)
+_WINDOWS_PATH_UTF16 = "\\Users\\".encode("utf-16-le")
 _EMAIL = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+")
 # Institutional contact addresses that are meant to be public (the site
 # footer links the group's address, as 3DPLAM's does). Personal addresses
@@ -68,12 +75,36 @@ def scan_text(text, hashes):
     return hits
 
 
+def scan_binary(path):
+    """Return True if the raw bytes of `path` contain a Windows
+    user-profile path, checked both as plain bytes and as UTF-16-LE (the
+    encoding NX embeds in some binary exports).
+    """
+    with open(path, "rb") as f:
+        data = f.read()
+    if _WINDOWS_PATH_BINARY.search(data):
+        return True
+    return _WINDOWS_PATH_UTF16 in data
+
+
 def default_files():
     out = subprocess.run(["git", "ls-files", "-z"], capture_output=True,
                          check=True, cwd=ROOT).stdout.decode()
     return [os.path.join(ROOT, p) for p in out.split("\0")
             if p and p.lower().endswith(TEXT_SUFFIXES)
             and p != "tools/privacy_hashes.txt"]
+
+
+def default_binary_files():
+    """Tracked files that are not scanned as text, for `scan_binary`.
+
+    .venv/ and node_modules/ are never tracked, so no extra filtering for
+    them is needed here.
+    """
+    out = subprocess.run(["git", "ls-files", "-z"], capture_output=True,
+                         check=True, cwd=ROOT).stdout.decode()
+    return [os.path.join(ROOT, p) for p in out.split("\0")
+            if p and not p.lower().endswith(TEXT_SUFFIXES)]
 
 
 def main(patterns=None, hashes_path=DEFAULT_HASHES):
@@ -93,9 +124,11 @@ def main(patterns=None, hashes_path=DEFAULT_HASHES):
     if patterns:
         files = sorted({f for p in patterns for f in glob.glob(p, recursive=True)
                         if os.path.isfile(f) and f.lower().endswith(TEXT_SUFFIXES)})
+        binary_files = []
     else:
         files = default_files()
-    if not files:
+        binary_files = default_binary_files()
+    if not files and not binary_files:
         print("verify_privacy: no files matched", file=sys.stderr)
         return 1
     failed = 0
@@ -105,10 +138,15 @@ def main(patterns=None, hashes_path=DEFAULT_HASHES):
                 failed += 1
                 # Never echo the matching text: that would print the name.
                 print(f"  FAIL  {os.path.relpath(path, ROOT)}:{line_no}  {kind}")
+    for path in binary_files:
+        if scan_binary(path):
+            failed += 1
+            # Never echo the matching bytes: that would print the path.
+            print(f"  FAIL  {os.path.relpath(path, ROOT)}  windows-path (binary)")
     if failed:
         print(f"\n{failed} personal-data hit(s). Remove or anonymise them (P1-P3).")
         return 1
-    print(f"verify_privacy: {len(files)} file(s) scanned, 0 hits")
+    print(f"verify_privacy: {len(files) + len(binary_files)} file(s) scanned, 0 hits")
     return 0
 
 

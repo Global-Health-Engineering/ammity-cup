@@ -7,7 +7,7 @@ No figure is a one-off screenshot.
 |---|---|
 | `stl_units.py` | STL geometry primitives (library) |
 | `verify_units.py` | CI gate, fails if any STL is not in millimetres |
-| `verify_scope.py` | CI gate, fails if a tracked file is out of scope (thesis, questionnaires, training slides, NX/STEP translation logs, planning content, intermediate meshes, raw video, certification artwork the project is not entitled to) |
+| `verify_scope.py` | CI gate, fails if a tracked file is out of scope (thesis, questionnaires, training slides, NX/STEP translation logs, native NX part files, planning content, intermediate meshes, raw video, certification artwork the project is not entitled to) |
 | `verify_copy.py` | CI gate, fails if banned certification/safety phrasing reaches the docs or the built site |
 | `verify_privacy.py` | CI gate, fails if participant names, personal paths or email addresses reach the docs or the built site |
 | `rename.py` | The old-to-new file-name mapping in [`../hardware/README.md`](../hardware/README.md#rename-map) (library) |
