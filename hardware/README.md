@@ -56,7 +56,7 @@ STEP files declare `SI_UNIT(.MILLI.,.METRE.)` and need no conversion.
 
 The thesis uses the author's original names. This repository renames every shipped file to a consistent, lower-case, hyphenated scheme. The table below is the full old to new mapping.
 
-| Original (thesis / NX) | In this repository |
+| Original name (thesis, CAD export) | In this repository |
 |---|---|
 | `Flower Low Cup/Print Flower/flower_cup_withrim_mold_bottomleft_m.stl` | `flower-low/mould-stl/flower-cup-withrim-mould-bottomleft.stl` |
 | `Flower Low Cup/Print Flower/flower_cup_withrim_mold_bottomright_m.stl` | `flower-low/mould-stl/flower-cup-withrim-mould-bottomright.stl` |

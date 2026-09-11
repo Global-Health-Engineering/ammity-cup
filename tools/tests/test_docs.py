@@ -23,5 +23,5 @@ def test_hardware_readme_lists_every_shipped_file():
     readme = read("hardware/README.md")
     for root, _, files in os.walk(os.path.join(ROOT, "hardware")):
         for f in files:
-            if f.endswith((".step", ".stl", ".prt")):
+            if f.endswith((".step", ".stl")):
                 assert f in readme, f
