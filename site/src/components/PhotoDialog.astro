@@ -7,7 +7,6 @@
   <div class="photo-head">
     <p class="photo-caption" id="photo-caption"></p>
     <div class="photo-actions">
-      <button type="button" id="photo-zoom" class="photo-btn">Zoom in</button>
       <button type="button" id="photo-close" class="photo-btn" aria-label="Close photo">Close</button>
     </div>
   </div>
@@ -19,60 +18,22 @@
 <script>
   // Progressive enhancement: every photo is a plain <img> inside a
   // <button>, so with this script dead the photo is still visible on the
-  // page, only the zoom affordance is missing. Hence the early return
-  // rather than any fallback path.
+  // page, only the larger-view affordance is missing. Hence the early
+  // return rather than any fallback path.
   const dialog = document.getElementById('photo-dialog') as HTMLDialogElement | null;
-  const stage = document.getElementById('photo-stage');
   const img = document.getElementById('photo-img') as HTMLImageElement | null;
   const caption = document.getElementById('photo-caption');
-  const zoomBtn = document.getElementById('photo-zoom');
   const openers = document.querySelectorAll<HTMLButtonElement>('.photo-open');
 
-  if (dialog && stage && img && caption && zoomBtn && openers.length && dialog.showModal) {
+  if (dialog && img && caption && openers.length && dialog.showModal) {
     let opener: HTMLButtonElement | null = null;
-    let zoomed = false;
-
-    function setZoomLabel() {
-      zoomBtn!.textContent = zoomed ? 'Zoom out' : 'Zoom in';
-    }
-
-    function fit() {
-      zoomed = false;
-      stage!.classList.remove('zoomed');
-      img!.style.width = '';
-      img!.style.height = '';
-      setZoomLabel();
-    }
-
-    function zoom() {
-      // The larger of 2x the fitted width and the image's own natural
-      // width: zooming in should never land smaller than the source
-      // resolution, but a low-resolution photo still zooms at least 2x
-      // so the control always does something visible.
-      const fittedWidth = img!.getBoundingClientRect().width;
-      const target = Math.max(fittedWidth * 2, img!.naturalWidth);
-      zoomed = true;
-      stage!.classList.add('zoomed');
-      img!.style.width = `${target}px`;
-      img!.style.height = 'auto';
-      setZoomLabel();
-    }
-
-    function toggleZoom() {
-      if (zoomed) fit();
-      else zoom();
-    }
 
     function open(button: HTMLButtonElement) {
       opener = button;
       caption!.textContent = button.dataset.caption ?? '';
       img!.src = button.dataset.full ?? '';
       img!.alt = button.dataset.caption ?? '';
-      fit();
       dialog!.showModal();
-      // Reset the pan position left over from a previous zoomed photo.
-      stage!.scrollLeft = 0;
-      stage!.scrollTop = 0;
     }
 
     function close() {
@@ -80,8 +41,6 @@
     }
 
     openers.forEach((button) => button.addEventListener('click', () => open(button)));
-    img.addEventListener('click', toggleZoom);
-    zoomBtn.addEventListener('click', toggleZoom);
     document.getElementById('photo-close')?.addEventListener('click', close);
 
     // Covers Esc, which fires `close` on the dialog without going through
@@ -90,10 +49,11 @@
       opener?.focus();
     });
 
-    // Clicking the backdrop closes. Same two-part check as ModelDialog:
-    // a gesture only counts as a backdrop click if it both starts and
-    // ends outside the dialog's own box, so panning the zoomed photo to
-    // its edge and releasing there does not close the dialog.
+    // Clicking the backdrop closes. Same two-part check as ModelDialog: a
+    // gesture only counts as a backdrop click if it both starts and ends
+    // outside the dialog's own box, so a drag that starts on the photo
+    // (for example, a text selection or a touch scroll gesture) and ends
+    // past the edge does not close the dialog.
     let pressedOutside = false;
     const isOutside = (event: { clientX: number; clientY: number }) => {
       const box = dialog!.getBoundingClientRect();
@@ -155,16 +115,17 @@
   }
   .photo-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* Height is viewport-relative and capped, same reasoning as
-     .model-stage: the photo needs room to be worth zooming into, but the
-     caption and controls must stay on screen on a short laptop window.
-     overflow: auto is what makes the zoomed image pannable, by scrollbar,
-     trackpad, mouse wheel or touch drag; nothing here disables pinch
-     zoom, which is a separate, browser-native gesture on top of this. */
+  /* The photo is shown fitted, at the largest size that fits the stage,
+     never larger than its own natural size: no click-to-enlarge toggle,
+     no panning, no overflow scrolling. Height is viewport-relative and
+     capped, same reasoning as .model-stage, so the caption and Close
+     button stay on screen on a short laptop window; on a phone the
+     dialog already fills almost the whole screen (92vw wide, up to 70vh
+     of stage), and the browser's own pinch gesture, untouched by
+     anything here, is what is left to get closer. */
   .photo-stage {
     position: relative;
     height: min(70vh, 640px);
-    overflow: auto;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -176,20 +137,6 @@
     max-height: 100%;
     width: auto;
     height: auto;
-    cursor: zoom-in;
-  }
-  /* Fitted, a small image centres in the stage. Zoomed, it can be larger
-     than the stage in either axis; flex-start on both axes is required
-     so the overflowing edges stay reachable by scrolling, a
-     centred/overflowing flex item clips its start edge unreachably in
-     most browsers. */
-  .photo-stage.zoomed {
-    align-items: flex-start;
-    justify-content: flex-start;
-  }
-  .photo-stage.zoomed #photo-img {
-    max-width: none;
-    max-height: none;
-    cursor: zoom-out;
+    object-fit: contain;
   }
 </style>

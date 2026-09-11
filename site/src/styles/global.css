@@ -175,9 +175,9 @@ code {
   background: var(--accent);
 }
 /* Same corner placement as .render-cue, but an outline pill on the
-   accent-2 colour with different text ("Zoom", never "View in 3D"), so
-   a photo's zoom control cannot be mistaken for a render's 3D-model
-   control even at a glance. */
+   accent-2 colour with different text ("View larger", never "View in
+   3D"), so a photo's dialog control cannot be mistaken for a render's
+   3D-model control even at a glance. */
 .photo-cue {
   position: absolute;
   right: 8px;

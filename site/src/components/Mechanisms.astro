@@ -86,7 +86,7 @@ const photos = [
       <figure class="photo">
         <button type="button" class="photo-open" data-full={`${base}/photos/${p.file}.webp`} data-caption={p.caption}>
           <img src={`${base}/photos/${p.file}.webp`} alt={p.alt} width={p.w} height={p.h} loading="lazy" />
-          <span class="photo-cue" aria-hidden="true">Zoom</span>
+          <span class="photo-cue" aria-hidden="true">View larger</span>
           <span class="visually-hidden">Open a larger view of this photo</span>
         </button>
         <figcaption>{p.caption}</figcaption>

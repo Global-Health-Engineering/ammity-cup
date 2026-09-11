@@ -1,4 +1,5 @@
 import glob, os, re
+from collections import Counter
 import pytest
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DIST = os.path.join(ROOT, "site", "dist")
@@ -49,21 +50,47 @@ def test_every_photo_is_referenced():
     for name in photos:
         assert f'/photos/{name}"' in h, name
 
-def test_every_photo_is_zoomable():
+def test_every_photo_opens_in_dialog_without_zoom():
     h = html()
     assert h.count('id="photo-dialog"') == 1
     photo_img_srcs = re.findall(r'<img\s+src="([^"]*?/photos/[^"]+)"', h)
     assert photo_img_srcs, "no photo <img> tags found"
-    # Every button.photo-open wraps exactly one photo <img>, and its
-    # data-full points at that same image, whatever order the button's
-    # own attributes come in.
+
+    # Every photo <img> except the hero photo sits inside a
+    # button.photo-open, whose data-full points at that same image,
+    # whatever order the button's own attributes come in.
     openers = re.findall(r'<button\b([^>]*)>(.*?)</button>', h, re.S)
     photo_openers = [(attrs, inner) for attrs, inner in openers if 'class="photo-open"' in attrs]
-    assert len(photo_openers) == len(photo_img_srcs), (len(photo_openers), len(photo_img_srcs))
+    # One fewer opener than photo <img>s: the hero photo has no opener.
+    assert len(photo_openers) == len(photo_img_srcs) - 1, (len(photo_openers), len(photo_img_srcs))
     for attrs, inner in photo_openers:
         full = re.search(r'data-full="([^"]+)"', attrs).group(1)
         img_src = re.search(r'<img\s+src="([^"]+)"', inner).group(1)
         assert full == img_src
+
+    # The hero photo sits in id="hero" as a plain <img>, not inside any
+    # link or button. (flower-low.webp appears twice in the page: once as
+    # the hero photo, and again, wrapped, among the Mechanisms
+    # prototypes, so this has to be a multiset difference, not a set
+    # one.)
+    wrapped_srcs = Counter(re.search(r'<img\s+src="([^"]+)"', inner).group(1) for _, inner in photo_openers)
+    unwrapped = list((Counter(photo_img_srcs) - wrapped_srcs).elements())
+    assert unwrapped == [s for s in photo_img_srcs if s.endswith('photos/flower-low.webp')][:1]
+    hero_start = h.index('id="hero"')
+    hero_end = h.index('</section>', hero_start)
+    hero_html = h[hero_start:hero_end]
+    fig_m = re.search(r'<figure\b[^>]*class="hero-photo"[^>]*>(.*?)</figure>', hero_html, re.S)
+    assert fig_m, "hero-photo figure not found"
+    fig_html = fig_m.group(1)
+    assert 'photos/flower-low.webp' in fig_html
+    assert '<a ' not in fig_html and '<button' not in fig_html
+
+    # No zoom control anywhere: no id/class containing "zoom", and no
+    # visible "Zoom" text (case sensitive: "zoom" also occurs, correctly,
+    # in the 3D-model dialog's own scroll/pinch hints, which are out of
+    # scope here and unrelated to photos).
+    assert not re.search(r'\b(?:id|class)="[^"]*zoom[^"]*"', h, re.I)
+    assert 'Zoom' not in h
 
 def test_bench_score_links():
     h = html()
