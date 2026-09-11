@@ -28,7 +28,7 @@ def test_every_referenced_asset_exists():
 def test_one_dialog_and_every_scene_linked():
     h = html()
     assert h.count('id="model-dialog"') == 1
-    for name in ["flower-low", "flower-low-section", "flower-low-vs-high", "flower-low-mould",
+    for name in ["flower-sections", "flower-low-vs-high", "flower-low-mould",
                  "concept-flower-high", "concept-twister", "concept-umbrella", "concept-drawstring",
                  "concept-duckbill", "concept-balloon", "concept-extraction-valve", "rig-artificial-vagina"]:
         assert f"/models/{name}.glb" in h, name

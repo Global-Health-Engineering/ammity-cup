@@ -37,7 +37,7 @@ from mathutils import Matrix, Vector
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from tools.parts import ROLE_COLORS, SCENES, UP_TO_Z, mesh_dir  # noqa: E402
+from tools.parts import ROLE_COLORS, SCENES, UP_TO_Z, mechanism_region, mesh_dir  # noqa: E402
 
 OUT = os.path.join(ROOT, "site", "public", "renders")
 MODELS_OUT = os.path.join(ROOT, "site", "public", "models")
@@ -209,20 +209,38 @@ def bbox_radius(lo, hi):
 def cut_half(obj, center, axis=1, keep_positive=True):
     """Boolean-difference away the half of `obj` on the removed side of
     `center[axis]` along `axis` (0=X, 1=Y, 2=Z), leaving the other half
-    with a flat cross-section at that plane."""
+    with a flat cross-section at that plane.
+
+    Returns False when nothing of `obj` is left, so the caller drops it. A
+    solid wholly on one side of the plane is decided from its bounding box
+    instead of by boolean: Flower Low's parting plane IS the section plane,
+    and the EXACT solver left the small stem-end piece that lies wholly on
+    the removed side untouched (a full ring where the section shows half)."""
+    lo, hi = world_bbox(obj)
+    c = center[axis]
+    if (hi[axis] <= c) if keep_positive else (lo[axis] >= c):
+        return False
+    if (lo[axis] >= c) if keep_positive else (hi[axis] <= c):
+        return True
     size = max(obj.dimensions) * 6 + mm(5)
     bpy.ops.mesh.primitive_cube_add(size=size)
     cutter = bpy.context.active_object
     cutter.location = Vector(center)
     offset = size / 2
     cutter.location[axis] += -offset if keep_positive else offset
-    mod = obj.modifiers.new("section", "BOOLEAN")
-    mod.operation = "DIFFERENCE"
-    mod.object = cutter
+    boolean_apply(obj, cutter, "DIFFERENCE")
+    bpy.data.objects.remove(cutter, do_unlink=True)
+    return len(obj.data.polygons) > 0
+
+
+def boolean_apply(obj, other, operation):
+    """Apply an EXACT boolean of `other` onto `obj`, destructively."""
+    mod = obj.modifiers.new("boolean", "BOOLEAN")
+    mod.operation = operation
+    mod.object = other
     mod.solver = "EXACT"
     bpy.context.view_layer.objects.active = obj
-    bpy.ops.object.modifier_apply(modifier="section")
-    bpy.data.objects.remove(cutter, do_unlink=True)
+    bpy.ops.object.modifier_apply(modifier="boolean")
 
 
 SENSOR_WIDTH = 36.0  # mm, Blender's default camera sensor width
@@ -418,9 +436,75 @@ def mirror_copy(obj, axis, at_mm):
     return dup
 
 
+REGION_SEGMENTS = 192  # around the axis; chord sag at the 18 mm wall ~0.002 mm
+
+
+def region_mesh(split, obj):
+    """tools.parts.mechanism_region() as a closed Blender mesh (metres, STEP
+    frame): the outline revolved about the cup axis, poles on the axis."""
+    lo, hi = world_bbox(obj)
+    far_r = (hi - lo).length / MM + 10
+    outline, (ax, az) = mechanism_region(split, ROOT, far_r, hi.y / MM + 10)
+    bm = bmesh.new()
+    rings = []
+    for r, y in outline:
+        if r == 0:
+            rings.append([bm.verts.new((mm(ax), mm(y), mm(az)))])
+            continue
+        rings.append([bm.verts.new((mm(ax + r * math.cos(t)), mm(y), mm(az + r * math.sin(t))))
+                      for t in (2 * math.pi * j / REGION_SEGMENTS for j in range(REGION_SEGMENTS))])
+    n = REGION_SEGMENTS
+    for a, b in zip(rings, rings[1:]):
+        for j in range(n):
+            if len(a) == 1:
+                bm.faces.new((a[0], b[(j + 1) % n], b[j]))
+            elif len(b) == 1:
+                bm.faces.new((a[j], a[(j + 1) % n], b[0]))
+            else:
+                bm.faces.new((a[j], a[(j + 1) % n], b[(j + 1) % n], b[j]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    me = bpy.data.meshes.new("mechanism-region")
+    bm.to_mesh(me)
+    bm.free()
+    region = bpy.data.objects.new("mechanism-region", me)
+    bpy.context.collection.objects.link(region)
+    return region
+
+
+def mesh_area_mm2(obj):
+    return sum(p.area for p in obj.data.polygons) / MM ** 2
+
+
+def split_by_region(obj, split):
+    """Split a fused solid into (body, mechanism) by tools.parts.FaceSplit's
+    rule. Rather than colouring face by face (a border that follows the
+    tessellation, and open pieces that a later section cut cannot cap),
+    the rule's region is built as a solid and the part is intersected with
+    it (mechanism) and differenced from it (body): two closed pieces,
+    with the border where the rule puts it. A face ends up in the
+    mechanism piece when its centroid is in the region, the same test
+    tools.parts.face_roles() applies (and the tests check); the two agree
+    up to the chord sag of the REGION_SEGMENTS-gon (~0.002 mm)."""
+    region = region_mesh(split, obj)
+    mech = obj.copy()
+    mech.data = obj.data.copy()
+    bpy.context.collection.objects.link(mech)
+    boolean_apply(mech, region, "INTERSECT")
+    boolean_apply(obj, region, "DIFFERENCE")
+    bpy.data.objects.remove(region, do_unlink=True)
+    if not obj.data.polygons or not mech.data.polygons:
+        raise SystemExit(f"{obj.name}: the split left an empty piece")
+    a_body, a_mech = mesh_area_mm2(obj), mesh_area_mm2(mech)
+    print(f"  split {obj.name}: body {a_body:.0f} mm2, mechanism {a_mech:.0f} mm2, "
+          f"mechanism/total {a_mech / (a_body + a_mech):.3f} (surface incl. the cut interface)")
+    return obj, mech
+
+
 def load_group(group, uniform_role=None):
     """Import every solid of a tools.parts.Group, coloured by role, in the
-    STEP files' own coordinate frame (metres)."""
+    STEP files' own coordinate frame (metres). A solid listed in
+    group.split is fused (several roles in one solid) and is split into a
+    body and a mechanism object first."""
     objs = []
     for k, step in enumerate(group.steps):
         d = os.path.join(ROOT, mesh_dir(step))
@@ -434,12 +518,20 @@ def load_group(group, uniform_role=None):
             if k == 0 and i in group.exclude:
                 continue
             role = (group.roles or {}).get(i, group.default_role) if k == 0 else group.default_role
-            role = uniform_role or role
             obj = import_and_prepare(os.path.join(d, rec["file"]))
             obj.name = f"{os.path.basename(d)}-{i}"
-            obj["role"] = role
-            set_material(obj, role_material(role))
-            objs.append(obj)
+            split = (group.split or {}).get(i) if k == 0 else None
+            if split and not uniform_role:
+                body, mech = split_by_region(obj, split)
+                mech.name = f"{obj.name}-mechanism"
+                body.name = f"{obj.name}-body"
+                pieces = [(body, "body"), (mech, "mechanism")]
+            else:
+                pieces = [(obj, uniform_role or role)]
+            for piece, piece_role in pieces:
+                piece["role"] = piece_role
+                set_material(piece, role_material(piece_role))
+                objs.append(piece)
     if group.mirror:
         axis, at = group.mirror
         objs += [mirror_copy(o, axis, at) for o in list(objs)]
@@ -474,6 +566,14 @@ FLAT_LAY_GAP_MM = 12
 # for the numbers), while the cut face itself (checked visually) still
 # reads as a lit surface rather than a black band.
 CUT_FILL_STRENGTH = 0.12
+
+# The section plane sits this far into the kept half rather than exactly
+# on the axis. The Flower files are modelled as two halves meeting at the
+# plane through the axis, so a cut exactly there runs along existing
+# edges and faces; on Flower High's fused solid that left a cut face of
+# hundreds of slivers (a dark wedge in its wall). 0.05 mm is far below
+# a pixel at any render size used here.
+SECTION_OFFSET_MM = 0.05
 
 
 def build_exploded(mould, cup):
@@ -519,10 +619,19 @@ def build(scene_def):
             # one another.
             view = Vector((0.35, -1.0, 0.45))
         if scene_def.layout == "section":
-            lo, hi = combined_bbox(objs)
-            for obj in objs:
-                cut_half(obj, bbox_center(lo, hi), axis=1, keep_positive=True)
-                set_material(obj, role_material(obj["role"]))
+            # Each group is cut through its own axis (its bbox centre in y,
+            # after place() centred every group on y = 0), so side-by-side
+            # cups from different files each show their own section.
+            for objs_ in groups:
+                lo, hi = combined_bbox(objs_)
+                plane = bbox_center(lo, hi) + Vector((0.0, mm(SECTION_OFFSET_MM), 0.0))
+                for obj in list(objs_):
+                    if cut_half(obj, plane, axis=1, keep_positive=True):
+                        set_material(obj, role_material(obj["role"]))
+                    else:
+                        objs_.remove(obj)
+                        bpy.data.objects.remove(obj, do_unlink=True)
+            objs = [o for g in groups for o in g]
             view, margin, fill = Vector((0.0, -1.0, 0.15)), 1.1, True
 
     if scene_def.view is not None:

@@ -15,16 +15,15 @@ load, and so do not affect how fast the page opens.
 | Scene | Triangles | Size |
 |---|---|---|
 | `concept-balloon` | 9 k | 0.2 MB |
-| `concept-drawstring` | 10 k | 0.2 MB |
+| `concept-drawstring` | 13 k | 0.3 MB |
 | `concept-duckbill` | 16 k | 0.3 MB |
 | `concept-extraction-valve` | 16 k | 0.3 MB |
-| `concept-flower-high` | 8 k | 0.2 MB |
+| `concept-flower-high` | 16 k | 0.3 MB |
 | `concept-flower-low` | 38 k | 0.7 MB |
 | `concept-twister` | 24 k | 0.5 MB |
 | `concept-umbrella` | 26 k | 0.5 MB |
-| `flower-low` | 58 k | 1.0 MB |
-| `flower-low-section` | 35 k | 0.8 MB |
-| `flower-low-vs-high` | 88 k | 1.6 MB |
+| `flower-sections` | 60 k | 1.6 MB |
+| `flower-low-vs-high` | 100 k | 2.0 MB |
 | `flower-low-mould` | 116 k | 2.2 MB |
 | `rig-artificial-vagina` | 8 k | 0.1 MB |
 
