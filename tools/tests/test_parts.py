@@ -100,7 +100,30 @@ def test_flower_high_is_split_wherever_it_is_shown():
         high = [g for g in s.groups if any("flower-high" in p for p in g.steps)]
         assert high and all(g.split for g in high), name
 
+def test_balloon_shows_its_derived_membrane_as_mechanism():
+    groups = SCENES["concept-balloon"].groups
+    derived = [g for g in groups if g.steps == ("hardware/balloon/step/balloon-top-mould.step",)]
+    assert len(derived) == 1
+    assert derived[0].derive == "mould-cavity" and derived[0].default_role == "mechanism"
+    assert SCENES["concept-balloon"].layout == "flat-lay"
+
+def _box(x0, x1, y0, y1, z0, z1):
+    """12 outward triangles of an axis-aligned box."""
+    c = [(x, y, z) for x in (x0, x1) for y in (y0, y1) for z in (z0, z1)]
+    quads = [(0, 1, 3, 2), (4, 6, 7, 5), (0, 4, 5, 1), (2, 3, 7, 6), (0, 2, 6, 4), (1, 5, 7, 3)]
+    return [(c[a], c[b], c[d]) for a, b, _, d in quads] + [(c[b], c[e], c[d]) for _, b, e, d in quads]
+
+def test_clean_extent_stops_where_thin_slivers_begin():
+    """A 5 mm block from y 0 to 10 with a 0.02 mm sheet sticking out of it
+    to y 14 (a comb sliver): the clean extent along y is the block."""
+    from tools.parts import clean_extent
+    tris = _box(0, 5, 0, 10, 0, 5) + _box(2, 2.02, 9, 14, 1, 4)
+    axis, lo, hi = clean_extent(tris)
+    assert axis == 1
+    assert 0 <= lo < 0.5 and 9 - 0.5 < hi < 9, (lo, hi)
+
 def test_drawstring_shows_its_lid_as_mechanism():
+
     groups = SCENES["concept-drawstring"].groups
     lid = [g for g in groups if g.steps == ("hardware/drawstring/step/drawstring.step",)]
     assert len(lid) == 1 and lid[0].default_role == "mechanism"

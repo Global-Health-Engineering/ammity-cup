@@ -30,7 +30,7 @@ STEP files with `mould` in the name are moulds. The rest are the cast parts. Som
 
 ## Known gaps
 
-- The balloon membrane exists only as a mould (`balloon-top-mould.step`); the balloon part itself could not be manufactured reliably and was excluded from bench testing (thesis p.20).
+- The balloon membrane exists only as a mould (`balloon-top-mould.step`); the balloon part itself could not be manufactured reliably and was excluded from bench testing (thesis p.20). The concept render shows the balloon derived from that mould's cavity, with the vent and core-pin channels trimmed (`tools/render_parts.py`, `derive_mould_cavity`), not from a part file.
 - The drawstring lid is modelled flat, as moulded, not folded against the inner wall as it sits in the cup. The concept render shows it that way: flat, beside the cup.
 - `flower-high/step/flower-cup-withrim-higher.step` is one fused solid (cup, petal disc, petals and strings together). The renders colour its petals and strings by a geometric rule calibrated on Flower Low's separate solids (`tools/parts.py`, `FaceSplit`), not by solids in the file.
 - `flower-low/step/flower-cup-withrim-part.step` holds 6 solids: two cup-body halves split at the mould parting plane, two small rim pieces, a petal disc, and the petals-with-strings solid.

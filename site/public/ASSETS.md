@@ -14,7 +14,7 @@ load, and so do not affect how fast the page opens.
 
 | Scene | Triangles | Size |
 |---|---|---|
-| `concept-balloon` | 9 k | 0.2 MB |
+| `concept-balloon` | 17 k | 0.4 MB |
 | `concept-drawstring` | 13 k | 0.3 MB |
 | `concept-duckbill` | 16 k | 0.3 MB |
 | `concept-extraction-valve` | 16 k | 0.3 MB |
@@ -26,6 +26,10 @@ load, and so do not affect how fast the page opens.
 | `flower-low-vs-high` | 100 k | 2.0 MB |
 | `flower-low-mould` | 116 k | 2.2 MB |
 | `rig-artificial-vagina` | 8 k | 0.1 MB |
+
+The purple balloon in `concept-balloon` has no part file: `render_parts.py`
+derives it as the cavity of `hardware/balloon/step/balloon-top-mould.step`,
+cut flat where the vent and core-pin channels begin.
 
 Triangle counts and sizes are the exported `.glb`, after the web-model
 decimation `render_parts.py` applies; source CAD is far heavier (see

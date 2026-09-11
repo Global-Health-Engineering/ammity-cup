@@ -83,6 +83,9 @@ class Group:
     # {solid index: FaceSplit} for fused solids whose roles must be told
     # apart by geometry rather than by solid index (first STEP file only).
     split: dict = None
+    # "mould-cavity": the part has no file of its own; steps[0] is its
+    # mould, and render_parts derives the part as that mould's cavity.
+    derive: str = None
 
 
 def read_stl_triangles(path):
@@ -192,6 +195,99 @@ def face_roles(triangles, split, root="."):
     return roles
 
 
+SLICE_STEP_MM = 0.25
+# Slice planes sit this far off the step grid so they never pass exactly
+# through a vertex (a CAD mesh has many vertices on round coordinates),
+# where a cross-section chain would break.
+SLICE_OFFSET_MM = 0.0137
+# A cross-section loop whose mean width (2 x area / perimeter) is below
+# this is a sliver sheet, not part of the moulded part. The
+# balloon cavity's comb slivers measure 0.00-0.03 mm; its real loops,
+# neck and vent stubs included, are 1.3 mm and more.
+THIN_MM = 0.15
+
+
+def _cross_section(tris, axis, level):
+    """Loops of the section of `tris` by the plane axis = level, as a list
+    of (area, perimeter, closed). Segment ends are keyed by the mesh edge
+    they lie on, so chaining never depends on float rounding."""
+    u, v = [i for i in range(3) if i != axis]
+    ends = {}
+    segs = []
+    for tri in tris:
+        keys = []
+        for i, j in ((0, 1), (1, 2), (2, 0)):
+            a, b = tri[i], tri[j]
+            if (a[axis] < level) != (b[axis] < level):
+                a, b = sorted((tuple(a), tuple(b)))
+                s = (level - a[axis]) / (b[axis] - a[axis])
+                key = (a, b)
+                ends[key] = (a[u] + (b[u] - a[u]) * s, a[v] + (b[v] - a[v]) * s)
+                keys.append(key)
+        if len(keys) == 2:
+            segs.append(keys)
+    by_end = {}
+    for n, (p, q) in enumerate(segs):
+        by_end.setdefault(p, []).append(n)
+        by_end.setdefault(q, []).append(n)
+    used = [False] * len(segs)
+    loops = []
+    for n in range(len(segs)):
+        if used[n]:
+            continue
+        used[n] = True
+        start, cur = segs[n]
+        pts = [ends[start], ends[cur]]
+        while cur != start:
+            nxt = [m for m in by_end[cur] if not used[m]]
+            if not nxt:
+                break
+            used[nxt[0]] = True
+            p, q = segs[nxt[0]]
+            cur = q if p == cur else p
+            pts.append(ends[cur])
+        area = abs(sum(x0 * y1 - x1 * y0 for (x0, y0), (x1, y1) in zip(pts, pts[1:]))) / 2
+        perim = sum(math.hypot(x1 - x0, y1 - y0) for (x0, y0), (x1, y1) in zip(pts, pts[1:]))
+        loops.append((area, perim, cur == start))
+    return loops
+
+
+def clean_extent(triangles, step=SLICE_STEP_MM, thin_mm=THIN_MM):
+    """Where along its longest axis a mesh is free of sliver sheets.
+
+    Slices the mesh every `step` mm along the axis of its largest
+    bounding-box extent. A slice is clean when every loop of its section
+    closes and none is thinner than `thin_mm` (area/perimeter). Returns
+    (axis, lo, hi): the first and last slice of the clean run that holds
+    the largest section, so cutting there keeps the body and drops every
+    sliver that starts past it."""
+    lo_b = [min(t[k][i] for t in triangles for k in range(3)) for i in range(3)]
+    hi_b = [max(t[k][i] for t in triangles for k in range(3)) for i in range(3)]
+    axis = max(range(3), key=lambda i: hi_b[i] - lo_b[i])
+    l0 = lo_b[axis] + SLICE_OFFSET_MM
+    n = int((hi_b[axis] - l0) / step) + 1
+    buckets = [[] for _ in range(n)]
+    for tri in triangles:
+        a = [p[axis] for p in tri]
+        for k in range(max(0, math.ceil((min(a) - l0) / step)),
+                       min(n - 1, math.floor((max(a) - l0) / step)) + 1):
+            buckets[k].append(tri)
+    clean, area = [], []
+    for k in range(n):
+        loops = _cross_section(buckets[k], axis, l0 + k * step)
+        clean.append(bool(loops) and all(c and p > 0 and a / p >= thin_mm / 2 for a, p, c in loops))
+        area.append(sum(a for a, _, _ in loops))
+    k = max(range(n), key=lambda i: area[i] if clean[i] else -1)
+    if not clean[k]:
+        raise ValueError("no clean cross-section found")
+    k0 = k1 = k
+    while k0 > 0 and clean[k0 - 1]:
+        k0 -= 1
+    while k1 < n - 1 and clean[k1 + 1]:
+        k1 += 1
+    return axis, l0 + k0 * step, l0 + k1 * step
+
+
 def mechanism_region(split, root, far_r, top_y):
     """The same rule as a solid of revolution about the cup axis: its
     (radius, y) outline in mm, from the axis at the lowest wall sample,
@@ -285,6 +381,11 @@ CONCEPT_GROUPS = {
     "balloon": (
         Group(steps=(_hw("balloon", "menstrual-cup-medium-without-balloon"),
                      _hw("balloon", "balloon-pipe")), up="+y"),
+        # The balloon itself has no part file, only its mould: derived as
+        # the mould's cavity (render_parts.derive_mould_cavity). Its bulb
+        # is flat in the mould's xy plane, so +z lays it flat.
+        Group(steps=(_hw("balloon", "balloon-top-mould"),), up="+z", default_role="mechanism",
+              derive="mould-cavity"),
     ),
     "extraction-valve": (
         Group(steps=(_hw("extraction-valve", "menstrual-cup-valve"),), up="+y"),
@@ -301,7 +402,8 @@ CONCEPT_CAPTIONS = {
     "drawstring": "Drawstring: cup body, and the lid that closes it (purple), shown flat as moulded; "
                   "in the cup the lid is folded against the inner wall.",
     "duckbill": "Duckbill: moulded as two halves and joined; shown as the mirrored pair.",
-    "balloon": "Balloon: cup body and bulb pipe; the balloon membrane exists only as its mould.",
+    "balloon": "Balloon: cup body and bulb pipe; the balloon (purple) is shown as the cavity of its "
+               "mould, with the vent and core-pin channels trimmed, since no part file for it exists.",
     "extraction-valve": "Extraction valve: cup body and valve button, shown side by side. Untested concept.",
 }
 

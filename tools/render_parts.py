@@ -37,7 +37,8 @@ from mathutils import Matrix, Vector
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from tools.parts import ROLE_COLORS, SCENES, UP_TO_Z, mechanism_region, mesh_dir  # noqa: E402
+from tools.parts import (ROLE_COLORS, SCENES, UP_TO_Z, clean_extent,  # noqa: E402
+                         mechanism_region, mesh_dir)
 
 OUT = os.path.join(ROOT, "site", "public", "renders")
 MODELS_OUT = os.path.join(ROOT, "site", "public", "models")
@@ -233,12 +234,15 @@ def cut_half(obj, center, axis=1, keep_positive=True):
     return len(obj.data.polygons) > 0
 
 
-def boolean_apply(obj, other, operation):
-    """Apply an EXACT boolean of `other` onto `obj`, destructively."""
+def boolean_apply(obj, other, operation, use_self=False):
+    """Apply an EXACT boolean of `other` onto `obj`, destructively.
+    `use_self` lets the solver handle an operand that intersects itself
+    (several overlapping solids joined into one object)."""
     mod = obj.modifiers.new("boolean", "BOOLEAN")
     mod.operation = operation
     mod.object = other
     mod.solver = "EXACT"
+    mod.use_self = use_self
     bpy.context.view_layer.objects.active = obj
     bpy.ops.object.modifier_apply(modifier="boolean")
 
@@ -500,11 +504,110 @@ def split_by_region(obj, split):
     return obj, mech
 
 
+CAVITY_INSET_MM = 0.2
+
+
+def mesh_stats(obj):
+    """(volume mm3, non-manifold edges, boundary edges)."""
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    bm.transform(obj.matrix_world)
+    stats = (abs(bm.calc_volume()) / MM ** 3,
+             sum(1 for e in bm.edges if not e.is_manifold),
+             sum(1 for e in bm.edges if e.is_boundary))
+    bm.free()
+    return stats
+
+
+def derive_mould_cavity(group):
+    """A part that exists only as its mould, derived as the mould's cavity.
+
+    1. Join the mould pieces (group.steps[0], every solid).
+    2. EXACT-difference them from a box CAVITY_INSET_MM inside their
+       combined bounding box; separate the result into loose parts.
+    3. Keep the largest-volume part, and fail unless it is the only part
+       over 10 % of the total (the rest are zero-volume slivers where the
+       box meets the mould faces).
+    4. The cavity also fills the vent and core-pin clearance channels,
+       which leave comb-like sliver sheets at both ends. tools.parts.
+       clean_extent() finds, along the part's longest axis (the neck
+       axis), the run of cross-sections with no sliver loop; the part is
+       cut flat at both ends of that run. The EXACT cut caps the faces,
+       and the result must be closed (checked).
+    """
+    d = os.path.join(ROOT, mesh_dir(group.steps[0]))
+    with open(os.path.join(d, "index.json")) as f:
+        pieces = [import_and_prepare(os.path.join(d, r["file"])) for r in json.load(f)["solids"]]
+    lo, hi = combined_bbox(pieces)
+    bpy.ops.object.select_all(action="DESELECT")
+    for p in pieces:
+        p.select_set(True)
+    bpy.context.view_layer.objects.active = pieces[0]
+    bpy.ops.object.join()
+    mould = bpy.context.active_object
+
+    inset = Vector((mm(CAVITY_INSET_MM),) * 3)
+    blo, bhi = lo + inset, hi - inset
+    bpy.ops.mesh.primitive_cube_add(size=1)
+    cavity = bpy.context.active_object
+    cavity.location = (blo + bhi) / 2
+    cavity.scale = bhi - blo
+    bpy.ops.object.transform_apply(location=True, scale=True)
+    boolean_apply(cavity, mould, "DIFFERENCE", use_self=True)
+    bpy.data.objects.remove(mould, do_unlink=True)
+
+    bpy.ops.object.select_all(action="DESELECT")
+    cavity.select_set(True)
+    bpy.context.view_layer.objects.active = cavity
+    bpy.ops.object.mode_set(mode="EDIT")
+    bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.mesh.separate(type="LOOSE")
+    bpy.ops.object.mode_set(mode="OBJECT")
+    parts = sorted(bpy.context.selected_objects, key=lambda o: -mesh_stats(o)[0])
+    vols = [mesh_stats(o)[0] for o in parts]
+    total = sum(vols)
+    print(f"  cavity: {len(parts)} loose parts, volumes (mm3) {[round(v, 1) for v in vols]}")
+    if sum(1 for v in vols if v > 0.1 * total) != 1:
+        raise SystemExit(f"{group.steps[0]}: expected exactly one cavity part over 10 % "
+                         f"of the total volume, got volumes {vols}")
+    part = parts[0]
+    for o in parts[1:]:
+        bpy.data.objects.remove(o, do_unlink=True)
+
+    part.data.calc_loop_triangles()
+    verts = [tuple(c / MM for c in v.co) for v in part.data.vertices]
+    tris = [tuple(verts[i] for i in t.vertices) for t in part.data.loop_triangles]
+    axis, cut_lo, cut_hi = clean_extent(tris)
+    at = Vector((0.0, 0.0, 0.0))
+    at[axis] = mm(cut_lo)
+    cut_half(part, at, axis=axis, keep_positive=True)
+    at[axis] = mm(cut_hi)
+    cut_half(part, at, axis=axis, keep_positive=False)
+    vol, nonmanifold, boundary = mesh_stats(part)
+    plo, phi = world_bbox(part)
+    size = (phi - plo) / MM
+    print(f"  cavity trimmed along {'xyz'[axis]} at {cut_lo:.2f} and {cut_hi:.2f} mm "
+          f"(part spanned {lo[axis] / MM + CAVITY_INSET_MM:.2f} to {hi[axis] / MM - CAVITY_INSET_MM:.2f}); "
+          f"{size.x:.1f} x {size.y:.1f} x {size.z:.1f} mm, {vol:.1f} mm3, "
+          f"{nonmanifold} non-manifold / {boundary} boundary edges")
+    if nonmanifold or boundary:
+        raise SystemExit(f"{group.steps[0]}: trimmed cavity is not closed")
+    part.name = f"{os.path.basename(d)}-cavity"
+    return part
+
+
 def load_group(group, uniform_role=None):
     """Import every solid of a tools.parts.Group, coloured by role, in the
     STEP files' own coordinate frame (metres). A solid listed in
     group.split is fused (several roles in one solid) and is split into a
-    body and a mechanism object first."""
+    body and a mechanism object first. A group with derive="mould-cavity"
+    is the one part derived from its mould (derive_mould_cavity)."""
+    if group.derive == "mould-cavity":
+        obj = derive_mould_cavity(group)
+        role = uniform_role or group.default_role
+        obj["role"] = role
+        set_material(obj, role_material(role))
+        return [obj]
     objs = []
     for k, step in enumerate(group.steps):
         d = os.path.join(ROOT, mesh_dir(step))
