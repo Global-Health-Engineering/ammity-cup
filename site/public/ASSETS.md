@@ -50,7 +50,7 @@ glovebox, supplied by the authors.
 | `photos/degassing-closeup.webp` | mixed silicone foaming under vacuum, close up | supplied by the authors | 1500 × 1500 |
 | `photos/flower-low-demoulding.webp` | Flower Low during demoulding, petals and strings cast straight along the mould core | supplied by the authors | 1449 × 1449 |
 | `photos/duckbill-half-in-mould.webp` | one Duckbill half in its open mould | supplied by the authors | 905 × 905 |
-| `photos/drawstring-lid-mould.webp` | the Drawstring lid mould halves, one holding the cast string | supplied by the authors | 748 × 839 |
+| `photos/drawstring-lid-mould.webp` | the Drawstring lid mould halves, one holding the cast string; frayed silicone that tore free during demoulding is stuck above each cavity | supplied by the authors | 748 × 839 |
 | `photos/glovebox.webp` | the flight glovebox, with artificial vaginas, syringes, tampons and SpaceCups in labelled bags | supplied by the authors | 1600 × 1200 |
 | `photos/artificial-vagina-demoulding.webp` | the self-made artificial vagina during demoulding, on its printed core with the outer mould halves opened | supplied by the authors | 1430 × 1430 |
 

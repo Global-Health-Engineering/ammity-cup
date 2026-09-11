@@ -23,7 +23,7 @@ const photos = [
   { file: 'degassing', w: 1001, h: 1000, alt: 'A glass vacuum desiccator on a bench, with a container of mixed silicone inside it and a vacuum pump behind.', caption: 'Degassing the mixed silicone in a vacuum desiccator.' },
   { file: 'degassing-closeup', w: 1500, h: 1500, alt: 'Close-up of orange-tinted silicone foaming with air bubbles as it is degassed under vacuum.', caption: 'Mixed silicone foaming as trapped air is drawn out under vacuum.' },
   { file: 'duckbill-half-in-mould', w: 905, h: 905, alt: 'One half of the Duckbill cup, cast in purple silicone, still sitting in its open printed mould half.', caption: 'One Duckbill half in its open mould; the two halves are cast separately and joined.' },
-  { file: 'drawstring-lid-mould', w: 748, h: 839, alt: 'Two flat printed mould halves for the Drawstring lid side by side; the right one holds a cast purple string in its channel.', caption: 'The Drawstring lid mould halves, one holding the cast string.' },
+  { file: 'drawstring-lid-mould', w: 748, h: 839, alt: 'Two flat printed mould halves for the Drawstring lid side by side; frayed, torn silicone is stuck to the top of each cavity, and the right half holds a cast purple string in its channel.', caption: 'The Drawstring lid mould halves, one holding the cast string; the frayed silicone above each cavity tore free during demoulding.' },
 ];
 ---
 <section id="make">
@@ -40,7 +40,7 @@ const photos = [
   </table></div>
   <h3>Casting</h3>
   <ol class="steps">{steps.map((s) => <li>{s}</li>)}</ol>
-  <h3>Casting in practice</h3>
+  <h3 class="photo-heading">Casting in practice</h3>
   <div class="photo-grid">
     {photos.map((p) => (
       <figure class="photo">
@@ -63,6 +63,7 @@ const photos = [
 </section>
 <style>
   #make h3 { margin: 28px 0 10px; }
+  #make h3.photo-heading { margin: 32px 0 0; }
   .steps { padding-left: 22px; display: grid; gap: 8px; }
   .steps li { color: var(--fg-dim); }
   .steps li::marker { color: var(--accent); font-weight: 600; font-family: var(--mono); }
