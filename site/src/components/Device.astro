@@ -15,7 +15,6 @@ const renders = [
 ];
 ---
 <section id="device">
-  <div class="eyebrow">Device</div>
   <h2>Device</h2>
   <p class="lead">
     The flown design, Flower Low, is a silicone cup with five flexible,
@@ -38,11 +37,15 @@ const renders = [
       </figure>
     ))}
     <figure class="render">
-      <img
-        src={`${base}/photos/flower-low-demoulding.webp`}
-        alt="The Flower Low cup being demoulded: the petals and two strings cast straight along the printed mould core."
-        width="1449" height="1449" loading="lazy"
-      />
+      <button type="button" class="photo-open" data-full={`${base}/photos/flower-low-demoulding.webp`} data-caption="Flower Low during demoulding: the petals and their strings are cast straight along the mould core, as in the CAD.">
+        <img
+          src={`${base}/photos/flower-low-demoulding.webp`}
+          alt="The Flower Low cup being demoulded: the petals and two strings cast straight along the printed mould core."
+          width="1449" height="1449" loading="lazy"
+        />
+        <span class="photo-cue" aria-hidden="true">Zoom</span>
+        <span class="visually-hidden">Open a larger view of this photo</span>
+      </button>
       <figcaption>Flower Low during demoulding: the petals and their strings are cast straight along the mould core, as in the CAD.</figcaption>
     </figure>
   </div>

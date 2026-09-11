@@ -28,7 +28,6 @@ const flightRows = [
 ];
 ---
 <section id="validation">
-  <div class="eyebrow">Validation</div>
   <h2>Validation</h2>
   <p class="lead">
     Six mechanisms were scored on the bench at 1 G, the Flower Low design was
@@ -37,7 +36,7 @@ const flightRows = [
     fluid volumes could be measured on board.
   </p>
 
-  <h3>Bench scores</h3>
+  <h3 id="bench-scores">Bench scores</h3>
   <p>Each criterion scored 1 (not met) to 5 (fully met); containment volume held at 1 G in brackets; target {site.bench.target_ml} mL, {site.bench.cycles} activation cycles.</p>
   <div class="scroll-x"><table class="result-table">
     <thead><tr><th>Mechanism</th>{CRIT.map(([, l]) => <th class="num">{l}</th>)}<th class="num">Overall</th></tr></thead>
@@ -58,11 +57,15 @@ const flightRows = [
     a comparison. Their post-flight answers (P1 to P3):
   </p>
   <figure class="photo glovebox-photo">
-    <img
-      src={`${base}/photos/glovebox.webp`}
-      alt="Inside the flight glovebox: two artificial vaginas labelled AV1 and AV2, numbered syringes, tampons and SpaceCups in labelled bags, and a camera, seen from above with a gloved hand reaching in."
-      width="1600" height="1200" loading="lazy"
-    />
+    <button type="button" class="photo-open" data-full={`${base}/photos/glovebox.webp`} data-caption="The flight glovebox: two store-bought artificial vaginas (AV1, AV2), numbered syringes, tampons and SpaceCups in labelled bags, and a camera.">
+      <img
+        src={`${base}/photos/glovebox.webp`}
+        alt="Inside the flight glovebox: two artificial vaginas labelled AV1 and AV2, numbered syringes, tampons and SpaceCups in labelled bags, and a camera, seen from above with a gloved hand reaching in."
+        width="1600" height="1200" loading="lazy"
+      />
+      <span class="photo-cue" aria-hidden="true">Zoom</span>
+      <span class="visually-hidden">Open a larger view of this photo</span>
+    </button>
     <figcaption>The flight glovebox: two store-bought artificial vaginas (AV1, AV2), numbered syringes, tampons and SpaceCups in labelled bags, and a camera.</figcaption>
   </figure>
   <div class="scroll-x"><table>
@@ -79,11 +82,15 @@ const flightRows = [
       <figcaption>The self-made artificial vagina used for the 1 G tests (the flights used a store-bought model).</figcaption>
     </figure>
     <figure class="photo">
-      <img
-        src={`${base}/photos/artificial-vagina-demoulding.webp`}
-        alt="The self-made artificial vagina during demoulding: the cast silicone model on its printed core, with the two outer mould halves opened."
-        width="1430" height="1430" loading="lazy"
-      />
+      <button type="button" class="photo-open" data-full={`${base}/photos/artificial-vagina-demoulding.webp`} data-caption="The self-made artificial vagina during demoulding: the cast silicone model on its printed core, with the two outer mould halves opened.">
+        <img
+          src={`${base}/photos/artificial-vagina-demoulding.webp`}
+          alt="The self-made artificial vagina during demoulding: the cast silicone model on its printed core, with the two outer mould halves opened."
+          width="1430" height="1430" loading="lazy"
+        />
+        <span class="photo-cue" aria-hidden="true">Zoom</span>
+        <span class="visually-hidden">Open a larger view of this photo</span>
+      </button>
       <figcaption>The self-made artificial vagina during demoulding: the cast silicone model on its printed core, with the two outer mould halves opened.</figcaption>
     </figure>
   </div>

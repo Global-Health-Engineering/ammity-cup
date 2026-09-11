@@ -10,20 +10,22 @@ const steps = [
 ];
 ---
 <section id="use">
-  <div class="eyebrow">Use</div>
-  <h2>Use and cleaning</h2>
+  <h2>Use and cleaning of the Flower designs</h2>
   <p class="lead">
-    This is the handling sequence used in the bench and flight tests. The
+    The handling steps below apply to the two Flower designs (Flower Low,
+    flown, and Flower High), whose pull strings close the petals; the other
+    mechanisms are operated differently and were not taken this far. The
     SpaceCup is a research prototype, not a certified medical device, and is
     not intended for personal use.
   </p>
   <ol class="steps">{steps.map((s) => <li>{s}</li>)}</ol>
   <p>
-    Of the three cleaning methods tested, 70 % isopropanol with shaking left
-    the fewest colonies. The narrow gaps between the Flower’s strings held
-    residue that steam reached poorly. Results are under
-    <a href="#validation">Validation</a>; the procedure is in
-    <a href={`${site.repo}/blob/main/docs/use.md`}>docs/use.md</a>.
+    The cleaning study covered Flower Low, Flower High, Drawstring and
+    Twister, plus a reference cup. Of the three cleaning methods tested,
+    70 % isopropanol with shaking left the fewest colonies. The narrow gaps
+    between the Flower’s strings held residue that steam reached poorly.
+    Results are under <a href="#validation">Validation</a>; the procedure is
+    in <a href={`${site.repo}/blob/main/docs/use.md`}>docs/use.md</a>.
   </p>
 </section>
 <style>

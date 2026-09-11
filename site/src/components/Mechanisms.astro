@@ -48,7 +48,6 @@ const photos = [
 ];
 ---
 <section id="mechanisms">
-  <div class="eyebrow">Mechanisms</div>
   <h2>Closing mechanisms</h2>
   <p class="lead">
     Every mechanism closes the same base cup. Six were cast and scored on the
@@ -69,7 +68,7 @@ const photos = [
         <figcaption>
           <strong>{c.name}</strong>{' '}
           <span class:list={['status', { flown: c.flown }]}>{c.status}</span>
-          {scores[c.slug] && <span class="score">{scores[c.slug].overall}/{site.bench.score_max}</span>}
+          {scores[c.slug] && <a class="score" href="#bench-scores">Bench score: {scores[c.slug].overall}/{site.bench.score_max}</a>}
           <br />{c.note}{' '}
           <a href={`${site.repo}/tree/main/hardware/${c.slug}`}>Files</a>
         </figcaption>
@@ -85,7 +84,11 @@ const photos = [
   <div class="photo-grid">
     {photos.map((p) => (
       <figure class="photo">
-        <img src={`${base}/photos/${p.file}.webp`} alt={p.alt} width={p.w} height={p.h} loading="lazy" />
+        <button type="button" class="photo-open" data-full={`${base}/photos/${p.file}.webp`} data-caption={p.caption}>
+          <img src={`${base}/photos/${p.file}.webp`} alt={p.alt} width={p.w} height={p.h} loading="lazy" />
+          <span class="photo-cue" aria-hidden="true">Zoom</span>
+          <span class="visually-hidden">Open a larger view of this photo</span>
+        </button>
         <figcaption>{p.caption}</figcaption>
       </figure>
     ))}

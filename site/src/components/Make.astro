@@ -27,7 +27,6 @@ const photos = [
 ];
 ---
 <section id="make">
-  <div class="eyebrow">Make</div>
   <h2>Printing the moulds and casting</h2>
   <p class="lead">
     Nothing about the cup is printed directly: the printer makes the moulds,
@@ -44,7 +43,11 @@ const photos = [
   <div class="photo-grid">
     {photos.map((p) => (
       <figure class="photo">
-        <img src={`${base}/photos/${p.file}.webp`} alt={p.alt} width={p.w} height={p.h} loading="lazy" />
+        <button type="button" class="photo-open" data-full={`${base}/photos/${p.file}.webp`} data-caption={p.caption}>
+          <img src={`${base}/photos/${p.file}.webp`} alt={p.alt} width={p.w} height={p.h} loading="lazy" />
+          <span class="photo-cue" aria-hidden="true">Zoom</span>
+          <span class="visually-hidden">Open a larger view of this photo</span>
+        </button>
         <figcaption>{p.caption}</figcaption>
       </figure>
     ))}

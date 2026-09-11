@@ -1,0 +1,195 @@
+<!--
+  A native <dialog>, shaped like ModelDialog: showModal() gives the focus
+  trap, the Esc-to-close binding, the inert background and the ::backdrop
+  for free.
+-->
+<dialog id="photo-dialog" aria-label="Photo">
+  <div class="photo-head">
+    <p class="photo-caption" id="photo-caption"></p>
+    <div class="photo-actions">
+      <button type="button" id="photo-zoom" class="photo-btn">Zoom in</button>
+      <button type="button" id="photo-close" class="photo-btn" aria-label="Close photo">Close</button>
+    </div>
+  </div>
+  <div class="photo-stage" id="photo-stage">
+    <img id="photo-img" src="" alt="" />
+  </div>
+</dialog>
+
+<script>
+  // Progressive enhancement: every photo is a plain <img> inside a
+  // <button>, so with this script dead the photo is still visible on the
+  // page, only the zoom affordance is missing. Hence the early return
+  // rather than any fallback path.
+  const dialog = document.getElementById('photo-dialog') as HTMLDialogElement | null;
+  const stage = document.getElementById('photo-stage');
+  const img = document.getElementById('photo-img') as HTMLImageElement | null;
+  const caption = document.getElementById('photo-caption');
+  const zoomBtn = document.getElementById('photo-zoom');
+  const openers = document.querySelectorAll<HTMLButtonElement>('.photo-open');
+
+  if (dialog && stage && img && caption && zoomBtn && openers.length && dialog.showModal) {
+    let opener: HTMLButtonElement | null = null;
+    let zoomed = false;
+
+    function setZoomLabel() {
+      zoomBtn!.textContent = zoomed ? 'Zoom out' : 'Zoom in';
+    }
+
+    function fit() {
+      zoomed = false;
+      stage!.classList.remove('zoomed');
+      img!.style.width = '';
+      img!.style.height = '';
+      setZoomLabel();
+    }
+
+    function zoom() {
+      // The larger of 2x the fitted width and the image's own natural
+      // width: zooming in should never land smaller than the source
+      // resolution, but a low-resolution photo still zooms at least 2x
+      // so the control always does something visible.
+      const fittedWidth = img!.getBoundingClientRect().width;
+      const target = Math.max(fittedWidth * 2, img!.naturalWidth);
+      zoomed = true;
+      stage!.classList.add('zoomed');
+      img!.style.width = `${target}px`;
+      img!.style.height = 'auto';
+      setZoomLabel();
+    }
+
+    function toggleZoom() {
+      if (zoomed) fit();
+      else zoom();
+    }
+
+    function open(button: HTMLButtonElement) {
+      opener = button;
+      caption!.textContent = button.dataset.caption ?? '';
+      img!.src = button.dataset.full ?? '';
+      img!.alt = button.dataset.caption ?? '';
+      fit();
+      dialog!.showModal();
+      // Reset the pan position left over from a previous zoomed photo.
+      stage!.scrollLeft = 0;
+      stage!.scrollTop = 0;
+    }
+
+    function close() {
+      dialog!.close();
+    }
+
+    openers.forEach((button) => button.addEventListener('click', () => open(button)));
+    img.addEventListener('click', toggleZoom);
+    zoomBtn.addEventListener('click', toggleZoom);
+    document.getElementById('photo-close')?.addEventListener('click', close);
+
+    // Covers Esc, which fires `close` on the dialog without going through
+    // the button above.
+    dialog.addEventListener('close', () => {
+      opener?.focus();
+    });
+
+    // Clicking the backdrop closes. Same two-part check as ModelDialog:
+    // a gesture only counts as a backdrop click if it both starts and
+    // ends outside the dialog's own box, so panning the zoomed photo to
+    // its edge and releasing there does not close the dialog.
+    let pressedOutside = false;
+    const isOutside = (event: { clientX: number; clientY: number }) => {
+      const box = dialog!.getBoundingClientRect();
+      return (
+        event.clientX < box.left ||
+        event.clientX > box.right ||
+        event.clientY < box.top ||
+        event.clientY > box.bottom
+      );
+    };
+    dialog.addEventListener('pointerdown', (event) => {
+      pressedOutside = isOutside(event);
+    });
+    dialog.addEventListener('click', (event) => {
+      if (pressedOutside && isOutside(event)) close();
+      pressedOutside = false;
+    });
+  }
+</script>
+
+<style is:global>
+  #photo-dialog {
+    width: min(92vw, 900px);
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--fg);
+  }
+  #photo-dialog::backdrop {
+    background: rgba(16, 19, 23, .55);
+  }
+  .photo-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .photo-caption {
+    margin: 0;
+    font-size: 13.5px;
+    color: var(--fg-dim);
+  }
+  .photo-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .photo-btn {
+    border: 1px solid var(--line);
+    background: var(--bg-2);
+    color: var(--fg);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .photo-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Height is viewport-relative and capped, same reasoning as
+     .model-stage: the photo needs room to be worth zooming into, but the
+     caption and controls must stay on screen on a short laptop window.
+     overflow: auto is what makes the zoomed image pannable, by scrollbar,
+     trackpad, mouse wheel or touch drag; nothing here disables pinch
+     zoom, which is a separate, browser-native gesture on top of this. */
+  .photo-stage {
+    position: relative;
+    height: min(70vh, 640px);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-2);
+  }
+  #photo-img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    cursor: zoom-in;
+  }
+  /* Fitted, a small image centres in the stage. Zoomed, it can be larger
+     than the stage in either axis; flex-start on both axes is required
+     so the overflowing edges stay reachable by scrolling, a
+     centred/overflowing flex item clips its start edge unreachably in
+     most browsers. */
+  .photo-stage.zoomed {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .photo-stage.zoomed #photo-img {
+    max-width: none;
+    max-height: none;
+    cursor: zoom-out;
+  }
+</style>

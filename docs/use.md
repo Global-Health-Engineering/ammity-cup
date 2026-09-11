@@ -1,6 +1,8 @@
-# Use
+# Use (Flower designs)
 
 How the SpaceCup prototypes were used during bench and flight testing. This describes the tested procedure, not a fitting or medical instruction: see the disclaimer at the end.
+
+The steps below apply to the two Flower designs (Flower Low, flown, and Flower High), whose pull strings close the petals; the other mechanisms are operated differently and were not taken this far.
 
 ## Insertion
 

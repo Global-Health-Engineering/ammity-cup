@@ -48,3 +48,49 @@ def test_every_photo_is_referenced():
     h = html()
     for name in photos:
         assert f'/photos/{name}"' in h, name
+
+def test_every_photo_is_zoomable():
+    h = html()
+    assert h.count('id="photo-dialog"') == 1
+    photo_img_srcs = re.findall(r'<img\s+src="([^"]*?/photos/[^"]+)"', h)
+    assert photo_img_srcs, "no photo <img> tags found"
+    # Every button.photo-open wraps exactly one photo <img>, and its
+    # data-full points at that same image, whatever order the button's
+    # own attributes come in.
+    openers = re.findall(r'<button\b([^>]*)>(.*?)</button>', h, re.S)
+    photo_openers = [(attrs, inner) for attrs, inner in openers if 'class="photo-open"' in attrs]
+    assert len(photo_openers) == len(photo_img_srcs), (len(photo_openers), len(photo_img_srcs))
+    for attrs, inner in photo_openers:
+        full = re.search(r'data-full="([^"]+)"', attrs).group(1)
+        img_src = re.search(r'<img\s+src="([^"]+)"', inner).group(1)
+        assert full == img_src
+
+def test_bench_score_links():
+    h = html()
+    assert h.count("Bench score: 24/25") >= 2
+    val_start = h.index('id="validation"')
+    val_end = h.index('id="limits"')
+    assert 'id="bench-scores"' in h[val_start:val_end]
+    for m in re.finditer(r'Bench score: \d+/\d+', h):
+        preceding = h[:m.start()]
+        last_open = max(
+            (a.start() for a in re.finditer(r'<a\b[^>]*href="#bench-scores"[^>]*>', preceding)),
+            default=-1,
+        )
+        last_close = preceding.rfind('</a>')
+        assert last_open != -1 and last_open > last_close, m.group(0)
+
+def test_no_eyebrow_above_section_titles():
+    h = html()
+    for attrs, content in re.findall(r'<section\b([^>]*)>(.*?)</section>', h, re.S):
+        m = re.search(r'id="([^"]+)"', attrs)
+        if not m or m.group(1) == "hero":
+            continue
+        assert 'class="eyebrow"' not in content, m.group(1)
+
+def test_use_section_scoped_to_flower():
+    h = html()
+    m = re.search(r'<section\b[^>]*id="use"[^>]*>(.*?)</section>', h, re.S)
+    assert m, "id=\"use\" section not found"
+    h2 = re.search(r'<h2[^>]*>(.*?)</h2>', m.group(1), re.S)
+    assert h2 and "Flower" in h2.group(1)

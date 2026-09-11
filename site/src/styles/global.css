@@ -142,7 +142,7 @@ code {
    handler, so it is focusable, announced as a control, and activated by
    Enter/Space with no extra code. These rules only strip the browser's
    default button chrome back to the bare image. */
-.render-open {
+.render-open, .photo-open {
   display: block;
   position: relative;
   width: 100%;
@@ -152,7 +152,7 @@ code {
   cursor: pointer;
   border-radius: 4px;
 }
-.render-open:focus-visible {
+.render-open:focus-visible, .photo-open:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
@@ -173,6 +173,33 @@ code {
 .render-open:focus-visible .render-cue {
   opacity: 1;
   background: var(--accent);
+}
+/* Same corner placement as .render-cue, but an outline pill on the
+   accent-2 colour with different text ("Zoom", never "View in 3D"), so
+   a photo's zoom control cannot be mistaken for a render's 3D-model
+   control even at a glance. */
+.photo-cue {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--ghe-white);
+  background: transparent;
+  color: var(--ghe-white);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .55);
+  opacity: .82;
+}
+.photo-open:hover .photo-cue,
+.photo-open:focus-visible .photo-cue {
+  opacity: 1;
+  border-color: var(--accent-2);
+  color: var(--accent-2);
+  text-shadow: none;
+  background: var(--ghe-white);
 }
 .visually-hidden {
   position: absolute;
