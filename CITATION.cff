@@ -9,7 +9,7 @@ abstract: >-
   campaign. This is a research prototype, not a certified medical device.
 type: software
 version: 1.0.0
-date-released: 2026-09-10
+date-released: 2026-09-11
 # A single value, not a list: Zenodo takes one licence per record.
 # The hardware in hardware/ is CERN-OHL-P v2, the licence that governs
 # the hardware design itself; the documentation, data, site and tooling
