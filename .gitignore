@@ -21,3 +21,7 @@ README_files/
 
 # SDD planning content for this release project, process, not product
 .superpowers/
+
+# local review material and helper script, not part of the release
+review/
+claude_session.sh

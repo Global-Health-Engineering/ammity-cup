@@ -9,7 +9,7 @@ def html():
     return open(os.path.join(DIST, "index.html"), encoding="utf-8").read()
 
 def test_all_sections_present_in_nav_order():
-    ids = ["hero", "background", "device", "mechanisms", "make", "use", "validation", "limits", "cite"]
+    ids = ["hero", "background", "mechanisms", "device", "make", "use", "validation", "limits", "cite"]
     pos = [html().index(f'id="{i}"') for i in ids]
     assert pos == sorted(pos)
 

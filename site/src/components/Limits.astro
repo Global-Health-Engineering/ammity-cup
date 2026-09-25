@@ -2,11 +2,9 @@
 import site from '../data/site.json';
 
 const limits = [
-  { title: 'Research prototype', detail: 'The SpaceCup is not a certified medical device and has not been tested on people. Cleaning was assessed under non-sterile conditions, mostly on general-purpose silicone.' },
-  { title: 'Short reduced-gravity windows', detail: `Each parabola gives about ${site.flight.reduced_gravity_s} s of reduced gravity, far from wearing a cup for hours in continuous microgravity.` },
-  { title: 'No measured volumes in flight', detail: 'There was no way to measure fluid on board; containment in flight is reported only as the participants observed it, and the small fluid volume made tampon and cup hard to tell apart.' },
-  { title: 'Simplified anatomy', detail: 'The flights used an opaque, simplified store-bought model, which limited what could be seen of the fluid, the walls and the cup.' },
-  { title: 'Residue on the mechanism', detail: 'Fluid collected on the Flower’s strings, and the narrow gaps between them were the hardest areas to clean.' },
+  { title: 'Research prototype', detail: 'This is a proof of concept. It is not a certified medical device: further testing and validation would be needed, and every mechanism still has to be developed in medical-grade silicone.' },
+  { title: 'Parabolic flight testing', detail: `The parabolic flights were, to our knowledge, the first time menstrual management was tested in a reduced gravity context, but each parabola lasted only about ${site.flight.reduced_gravity_s} s. Representing an astronaut wearing such a device calls for longer campaigns, which would also let the tampon (the reference device) and the SpaceCups collect more fluid in flight.` },
+  { title: 'Experimental set-up', detail: 'In flight the SpaceCups and tampons were inserted into a model vagina that does not accurately represent the female anatomy. It was also too opaque to track the behaviour of the menstrual blood adequately.' },
 ];
 ---
 <section id="limits">

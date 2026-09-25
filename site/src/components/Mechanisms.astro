@@ -38,59 +38,66 @@ const cards = [
     caption: 'Extraction valve: the grey cup body beside the purple valve button. Untested concept.',
     alt: 'Render of the Extraction valve SpaceCup concept: a grey cup body beside the purple valve button.' },
 ];
-const photos = [
-  { file: 'flower-low', w: 1108, h: 1108, alt: 'The Flower Low prototype cast in silicone: a purple cup with orange petals inside the rim.', caption: 'Flower Low: petals (orange) inside the rim.' },
-  { file: 'flower-high', w: 1101, h: 1102, alt: 'The Flower High prototype cast in silicone: a purple cup with orange petals sitting close to the rim.', caption: 'Flower High: the petals sit nearer the rim.' },
-  { file: 'duckbill', w: 1200, h: 1200, alt: 'Looking into the opening of the Duckbill prototype: a round dark opening crossed by a thin orange line.', caption: 'Duckbill, seen into the opening.' },
-  { file: 'twister', w: 1018, h: 1018, alt: 'The Twister prototype cast in silicone: an orange inner skin visible inside the purple cup.', caption: 'Twister: the orange inner skin inside the cup.' },
-  { file: 'drawstring', w: 1100, h: 1101, alt: 'The Drawstring prototype held upside down, its purple lid across the opening: orange test fluid leaking out around the lid’s edge.', caption: 'Drawstring: test fluid leaking past the lid, the failure behind its sealing score of 1.' },
-  { file: 'umbrella', w: 1056, h: 1055, alt: 'The Umbrella prototype cast in silicone: an orange umbrella structure on a green frame inside the opening.', caption: 'Umbrella: the orange umbrella and its green frame inside the opening.' },
-];
+const photos = {
+  'flower-low': { w: 1108, h: 1108, alt: 'The Flower Low prototype cast in silicone: a purple cup with orange petals inside the rim.', caption: 'Flower Low: petals (orange) inside the rim.' },
+  'flower-high': { w: 1101, h: 1102, alt: 'The Flower High prototype cast in silicone: a purple cup with orange petals sitting close to the rim.', caption: 'Flower High: the petals sit nearer the rim.' },
+  duckbill: { w: 1200, h: 1200, alt: 'Looking into the opening of the Duckbill prototype: a round dark opening crossed by a thin orange line.', caption: 'Duckbill, seen into the opening.' },
+  twister: { w: 1018, h: 1018, alt: 'The Twister prototype cast in silicone: an orange inner skin visible inside the purple cup.', caption: 'Twister: the orange inner skin inside the cup.' },
+  drawstring: { w: 1100, h: 1101, alt: 'The Drawstring prototype held upside down, its purple lid across the opening: orange test fluid leaking out around the lid\u2019s edge.', caption: 'Drawstring: test fluid leaking past the lid, the failure behind its sealing score of 1.' },
+  umbrella: { w: 1056, h: 1055, alt: 'The Umbrella prototype cast in silicone: an orange umbrella structure on a green frame inside the opening.', caption: 'Umbrella: the orange umbrella and its green frame inside the opening.' },
+};
+// The two mechanisms without a prototype photo say why, so the empty cell is
+// never read as a missing file.
+const noPhoto = {
+  balloon: 'No prototype photo: the thin membranes could not be cast reliably.',
+  'extraction-valve': 'No prototype photo: designed, not tested.',
+};
 ---
 <section id="mechanisms">
   <h2>Closing mechanisms</h2>
   <p class="lead">
-    Every mechanism closes the same base cup. Six were cast and scored on the
-    bench out of {site.bench.score_max}; the scores and the scale are under
-    <a href="#validation">Validation</a>. Parts that come from separate CAD
-    files are shown side by side, not assembled. The eighth card, the
-    extraction valve, is a later concept: designed, but not tested and not
-    part of the thesis.
+    Six closing mechanisms were designed, cast from silicon, and scored on the
+    bench out of {site.bench.score_max}. Every mechanism closes the same base
+    cup. The scores and the scale are under <a href="#validation">Validation</a>.
+    Parts that come from separate CAD files are shown side by side, not assembled.
+    The eighth card, the extraction valve, is a later concept: designed, but not
+    tested and not part of the thesis.
+
+    The prototypes were cast in coloured silicone; in the renders, colour
+    marks the role of a part (grey body, purple closing mechanism), not its
+    material.
   </p>
-  <div class="render-grid">
+  <div class="mech-list">
     {cards.map((c) => (
-      <figure class="render">
-        <button type="button" class="render-open" data-model={`${base}/models/concept-${c.slug}.glb`} data-caption={c.caption}>
-          <img src={`${base}/renders/concept-${c.slug}.png`} alt={c.alt} loading="lazy" />
-          <span class="render-cue" aria-hidden="true">View in 3D</span>
-          <span class="visually-hidden">Open an interactive 3D model of the {c.name}</span>
-        </button>
-        <figcaption>
+      <div class="mech">
+        <div class="mech-pair">
+          <figure class="mech-cell">
+            <button type="button" class="render-open" data-model={`${base}/models/concept-${c.slug}.glb`} data-caption={c.caption}>
+              <img src={`${base}/renders/concept-${c.slug}.png`} alt={c.alt} loading="lazy" />
+              <span class="render-cue" aria-hidden="true">View in 3D</span>
+              <span class="visually-hidden">Open an interactive 3D model of the {c.name}</span>
+            </button>
+          </figure>
+          {photos[c.slug] ? (
+            <figure class="mech-cell">
+              <button type="button" class="photo-open" data-full={`${base}/photos/${c.slug}.webp`} data-caption={photos[c.slug].caption}>
+                <img src={`${base}/photos/${c.slug}.webp`} alt={photos[c.slug].alt} width={photos[c.slug].w} height={photos[c.slug].h} loading="lazy" />
+                <span class="photo-cue" aria-hidden="true">View larger</span>
+                <span class="visually-hidden">Open a larger view of this photo</span>
+              </button>
+            </figure>
+          ) : (
+            <p class="mech-nophoto">{noPhoto[c.slug]}</p>
+          )}
+        </div>
+        <p class="mech-meta">
           <strong>{c.name}</strong>{' '}
           <span class:list={['status', { flown: c.flown }]}>{c.status}</span>
           {scores[c.slug] && <a class="score" href="#bench-scores">Bench score: {scores[c.slug].overall}/{site.bench.score_max}</a>}
           <br />{c.note}{' '}
           <a href={`${site.repo}/tree/main/hardware/${c.slug}`}>Files</a>
-        </figcaption>
-      </figure>
-    ))}
-  </div>
-  <h3>The prototypes</h3>
-  <p class="lead">
-    The prototypes were cast in coloured silicone; in the renders, colour
-    marks the role of a part (grey body, purple closing mechanism), not its
-    material.
-  </p>
-  <div class="photo-grid">
-    {photos.map((p) => (
-      <figure class="photo">
-        <button type="button" class="photo-open" data-full={`${base}/photos/${p.file}.webp`} data-caption={p.caption}>
-          <img src={`${base}/photos/${p.file}.webp`} alt={p.alt} width={p.w} height={p.h} loading="lazy" />
-          <span class="photo-cue" aria-hidden="true">View larger</span>
-          <span class="visually-hidden">Open a larger view of this photo</span>
-        </button>
-        <figcaption>{p.caption}</figcaption>
-      </figure>
+        </p>
+      </div>
     ))}
   </div>
 </section>
@@ -98,5 +105,26 @@ const photos = [
   .score { font-family: var(--sans); font-weight: 600; color: var(--accent); text-decoration: none; margin-left: 6px; }
   .score:hover, .score:focus-visible { text-decoration: underline; }
   strong { color: var(--fg); }
-  #mechanisms h3 { margin: 32px 0 0; }
+  .mech-list { display: grid; gap: 24px; margin-top: 32px; }
+  .mech {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+  }
+  .mech-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: start; }
+  .mech-cell { margin: 0; min-width: 0; }
+  .mech-cell img { display: block; width: 100%; height: auto; border-radius: 4px; }
+  .mech-nophoto {
+    margin: 0;
+    align-self: center;
+    font-size: 13px;
+    color: var(--fg-dim);
+    padding: 0 8px;
+  }
+  .mech-meta { margin: 14px 0 0; font-size: 14.5px; color: var(--fg-dim); line-height: 1.5; }
+  /* One column on phones, so neither the render nor the photo is squeezed. */
+  @media (max-width: 700px) {
+    .mech-pair { grid-template-columns: 1fr; }
+  }
 </style>
