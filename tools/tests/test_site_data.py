@@ -2,10 +2,13 @@ import csv, json, os
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SITE = json.load(open(os.path.join(ROOT, "site", "src", "data", "site.json"), encoding="utf-8"))
 
-def test_no_oshwa_no_doi_no_onshape():
+def test_no_oshwa_no_onshape():
     text = json.dumps(SITE).lower()
-    for banned in ("oshwa", "doi", "onshape", "plausible"):
+    for banned in ("oshwa", "onshape", "plausible"):
         assert banned not in text, banned
+
+def test_doi_is_the_zenodo_concept_doi():
+    assert SITE["doi"] == "10.5281/zenodo.24010364"
 
 def test_repo_and_names():
     assert SITE["repo"] == "https://github.com/Global-Health-Engineering/ammity-cup"

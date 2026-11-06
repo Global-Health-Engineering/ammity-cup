@@ -11,14 +11,25 @@ def test_author_order_everywhere():
     z = json.loads(read(".zenodo.json"))
     assert [c["name"].split(",")[0] for c in z["creators"]] == ORDER
 
-def test_licences_and_no_deferred_items():
+CONCEPT_DOI = "10.5281/zenodo.24010364"
+
+def test_licences_and_no_oshwa_claim():
     z = json.loads(read(".zenodo.json"))
     assert z["license"] == "cern-ohl-p-2.0"
     cff = read("CITATION.cff")
     assert "license: CERN-OHL-P-2.0" in cff
     for p in ("README.md", "CITATION.cff", ".zenodo.json"):
-        low = read(p).lower()
-        assert "oshwa" not in low and "zenodo.org/badge" not in low and "doi:" not in low, p
+        assert "oshwa" not in read(p).lower(), p
+
+def test_concept_doi_everywhere():
+    assert f"doi: {CONCEPT_DOI}" in read("CITATION.cff")
+    readme = read("README.md")
+    assert f"zenodo.org/badge/DOI/{CONCEPT_DOI}.svg" in readme
+    assert f"https://doi.org/{CONCEPT_DOI}" in readme
+    site = json.loads(read("site/src/data/site.json"))
+    assert site["doi"] == CONCEPT_DOI
+    # Zenodo assigns the DOI itself; .zenodo.json must not carry one.
+    assert "doi" not in json.loads(read(".zenodo.json"))
 
 ORCIDS = {
     "Keller": "0009-0001-5506-8729",

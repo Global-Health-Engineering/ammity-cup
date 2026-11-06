@@ -5,6 +5,7 @@
   "tagline": "An open-source silicone menstrual cup that seals before extraction, for menstruation in reduced gravity",
   "repo": "https://github.com/Global-Health-Engineering/ammity-cup",
   "version": "1.0.0",
+  "doi": "10.5281/zenodo.24010364",
   "flight": {
     "campaign": "Asclepios VI",
     "reduced_gravity_s": 6,

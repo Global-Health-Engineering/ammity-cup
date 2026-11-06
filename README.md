@@ -1,4 +1,5 @@
 <!-- badges: start -->
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24010364.svg)](https://doi.org/10.5281/zenodo.24010364)
 [![Licence: CERN-OHL-P v2](https://img.shields.io/badge/hardware-CERN--OHL--P%20v2-873671)](LICENSE-CERN-OHL-P-2.0.md)
 [![Licence: CC BY 4.0](https://img.shields.io/badge/docs%20%26%20data-CC%20BY%204.0-457ec1)](LICENSE-CC-BY-4.0.md)
 [![Deploy site to GitHub Pages](https://github.com/Global-Health-Engineering/ammity-cup/actions/workflows/deploy-site.yml/badge.svg)](https://github.com/Global-Health-Engineering/ammity-cup/actions/workflows/deploy-site.yml)
@@ -76,7 +77,8 @@ If you use this hardware, please cite it; see [`CITATION.cff`](CITATION.cff) for
 
 > SpaceCup (AMMITY): an open-source menstrual cup that seals before
 > extraction, for menstruation in reduced gravity. Kim Keller, Marion
-> Dugué, Jakub Tkaczuk, Elizabeth Tilley. ETH Zurich. Version 1.0.0. https://github.com/Global-Health-Engineering/ammity-cup
+> Dugué, Jakub Tkaczuk, Elizabeth Tilley. ETH Zurich. Version 1.0.0.
+> https://doi.org/10.5281/zenodo.24010364
 
 ## License
 

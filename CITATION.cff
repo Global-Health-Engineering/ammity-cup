@@ -10,6 +10,14 @@ abstract: >-
 type: software
 version: 1.0.0
 date-released: 2026-11-06
+doi: 10.5281/zenodo.24010364
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.24010364
+    description: "Concept DOI, resolves to the latest version"
+  - type: doi
+    value: 10.5281/zenodo.24010365
+    description: "Version 1.0.0"
 license: CERN-OHL-P-2.0
 repository-code: "https://github.com/Global-Health-Engineering/ammity-cup"
 url: "https://global-health-engineering.github.io/ammity-cup/"
