@@ -9,11 +9,7 @@ abstract: >-
   campaign. This is a research prototype, not a certified medical device.
 type: software
 version: 1.0.0
-date-released: 2026-09-11
-# A single value, not a list: Zenodo takes one licence per record.
-# The hardware in hardware/ is CERN-OHL-P v2, the licence that governs
-# the hardware design itself; the documentation, data, site and tooling
-# are CC BY 4.0, as set out in the README and in LICENSE-CC-BY-4.0.md.
+date-released: 2026-11-06
 license: CERN-OHL-P-2.0
 repository-code: "https://github.com/Global-Health-Engineering/ammity-cup"
 url: "https://global-health-engineering.github.io/ammity-cup/"
@@ -28,20 +24,22 @@ keywords:
 authors:
   - family-names: Keller
     given-names: Kim
+    orcid: https://orcid.org/0009-0001-5506-8729
     affiliation: "ETH Zurich, Global Health Engineering"
   - family-names: Dugué
     given-names: Marion
-    affiliation: "ETH Zurich, Global Health Engineering"
+    orcid: https://orcid.org/0000-0001-9188-8321
+    affiliation: "ETH Zurich, Environmental and Geomatic Engineering"
   - family-names: Tkaczuk
     given-names: Jakub
-    orcid: "https://orcid.org/0000-0001-7997-9423"
+    orcid: https://orcid.org/0000-0001-7997-9423
     affiliation: "ETH Zurich, Global Health Engineering"
   - family-names: Tilley
     given-names: Elizabeth
-    orcid: "https://orcid.org/0000-0002-2095-9724"
+    orcid: https://orcid.org/0000-0002-2095-9724
     affiliation: "ETH Zurich, Global Health Engineering"
 contact:
   - family-names: Tkaczuk
     given-names: Jakub
-    orcid: "https://orcid.org/0000-0001-7997-9423"
+    orcid: https://orcid.org/0000-0001-7997-9423
     affiliation: "ETH Zurich, Global Health Engineering"

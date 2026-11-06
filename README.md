@@ -11,8 +11,8 @@
 
 # SpaceCup (AMMITY)
 
-- **Kim Keller** (ETH Zürich, Global Health Engineering) *design, construction, testing, writing*
-- **Marion Dugué** (ETH Zürich, Global Health Engineering) *flight-experiment co-lead, supervision*
+- **Kim Keller** [![ORCID](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png) 0009-0001-5506-8729](https://orcid.org/0009-0001-5506-8729) (ETH Zürich, Global Health Engineering) *design, construction, testing, writing*
+- **Marion Dugué** [![ORCID](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png) 0000-0001-9188-8321](https://orcid.org/0000-0001-9188-8321) (ETH Zürich, Environmental and Geomatic Engineering) *flight-experiment co-lead, supervision*
 - **Jakub Tkaczuk** [![ORCID](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png) 0000-0001-7997-9423](https://orcid.org/0000-0001-7997-9423) (ETH Zürich, Global Health Engineering) *supervision, page development & maintenance*
 - **Elizabeth Tilley** [![ORCID](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png) 0000-0002-2095-9724](https://orcid.org/0000-0002-2095-9724) (ETH Zürich, Global Health Engineering) *supervision*
 
@@ -76,8 +76,7 @@ If you use this hardware, please cite it; see [`CITATION.cff`](CITATION.cff) for
 
 > SpaceCup (AMMITY): an open-source menstrual cup that seals before
 > extraction, for menstruation in reduced gravity. Kim Keller, Marion
-> Dugué, Jakub Tkaczuk, Elizabeth Tilley. ETH Zurich, Global Health
-> Engineering. Version 1.0.0. https://github.com/Global-Health-Engineering/ammity-cup
+> Dugué, Jakub Tkaczuk, Elizabeth Tilley. ETH Zurich. Version 1.0.0. https://github.com/Global-Health-Engineering/ammity-cup
 
 ## License
 

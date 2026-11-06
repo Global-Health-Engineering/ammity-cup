@@ -20,7 +20,20 @@ def test_licences_and_no_deferred_items():
         low = read(p).lower()
         assert "oshwa" not in low and "zenodo.org/badge" not in low and "doi:" not in low, p
 
-def test_orcids_only_where_known():
+ORCIDS = {
+    "Keller": "0009-0001-5506-8729",
+    "Dugué": "0000-0001-9188-8321",
+    "Tkaczuk": "0000-0001-7997-9423",
+    "Tilley": "0000-0002-2095-9724",
+}
+
+def test_orcids_for_every_author():
     cff = read("CITATION.cff")
-    assert "0000-0001-7997-9423" in cff and "0000-0002-2095-9724" in cff
-    assert cff.count("orcid:") == 3   # Tkaczuk, Tilley, and Tkaczuk again as contact
+    for orcid in ORCIDS.values():
+        assert f"orcid: https://orcid.org/{orcid}" in cff
+    assert cff.count("orcid:") == 5   # four authors, plus Tkaczuk again as contact
+    z = json.loads(read(".zenodo.json"))
+    assert {c["name"].split(",")[0]: c.get("orcid") for c in z["creators"]} == ORCIDS
+    readme = read("README.md")
+    for orcid in ORCIDS.values():
+        assert f"(https://orcid.org/{orcid})" in readme
